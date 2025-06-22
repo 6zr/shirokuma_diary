@@ -1,0 +1,1 @@
+# shirokuma_diary
