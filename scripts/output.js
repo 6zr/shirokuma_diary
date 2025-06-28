@@ -26,7 +26,7 @@ const diary = `[${TODAY}]\n\n${MARKOV}\n\n...ってかんじの日だったワ�
 console.log(diary);
 fs.writeFileSync(outputPath, diary);
 
-const keywords = KEYWORDS
+const keywords = (JSON.parse(KEYWORDS) || [])
     .map(x => ({
         keyword: x.keyword.name, 
         category: x.keyword.keywordCategory.code,
