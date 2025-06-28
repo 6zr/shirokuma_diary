@@ -27,6 +27,7 @@ jobs:
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
+          MASTODON_ACCOUNT_ID: '898916'
         run: |
           # スクリプトを実行する前に npm install が行われていることを確認
           node scripts/download_timeline.js
@@ -41,12 +42,16 @@ jobs:
 
       - name: make Markov TEXT
         id: make_markov_text
+        env:
+          STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
         run: |
           node scripts/markov.js
 
       - name: output
         id: output
         env:
+          BEAR_DIRNAME: 'shirokuma_bot'
+          STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
           STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine.outputs.keywords }}
           STEP_OUTPUT_MARKOV: ${{ steps.make_markov_text.outputs.result }}
         run: |

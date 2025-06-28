@@ -1,9 +1,11 @@
 const core = require("@actions/core");
-const fs = require('fs');
+// const fs = require('fs');
 const kuromoji = require('kuromoji');
 const builder = kuromoji.builder({
   dicPath: 'node_modules/kuromoji/dict'
 });
+
+const CONTENTS_TEXT = process.env.STEP_OUTPUT_CONTENTS_TEXT;
 
 // マルコフ連鎖の実装
 class Markov {
@@ -61,7 +63,8 @@ var markov = new Markov();
         });
         console.log('Tokenizer built successfully.');
 
-        const data = fs.readFileSync('data/contents.txt', 'utf-8');
+        // const data = fs.readFileSync('data/contents.txt', 'utf-8');
+        const data = CONTENTS_TEXT;
 
         var lines = data.split("\n"); // 一行ごとに分割
         lines.forEach(function(line) {

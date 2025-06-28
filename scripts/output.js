@@ -10,13 +10,27 @@ const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short' }).format(
 const shortDayOfWeek = dayOfWeek.replace('曜日', ''); // '月曜日' -> '月'
 const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
+const CONTENTS_TEXT = process.env.STEP_OUTPUT_CONTENTS_TEXT;
 const KEYWORDS = process.env.STEP_OUTPUT_KEYWORDS;
 const MARKOV = process.env.STEP_OUTPUT_MARKOV;
+const BEAR_DIRNAME = process.env.BEAR_DIRNAME;
 
-const outputDir = './diary';
-if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-    console.log(`Directory created: ${outputDir}`);
+const dataOutputDir = `./${BEAR_DIRNAME}/data`;
+if (!fs.existsSync(dataOutputDir)) {
+    fs.mkdirSync(dataOutputDir, { recursive: true });
+    console.log(`Directory created: ${dataOutputDir}`);
+}
+
+const contentsFilename = `contents.txt`;
+const contentsOutputPath = path.join(dataOutputDir, contentsFilename);
+fs.writeFileSync(contentsOutputPath, CONTENTS_TEXT);
+console.log(`data saved to ${contentsOutputPath}`);
+
+
+const diaryOutputDir = `./${BEAR_DIRNAME}/diary`;
+if (!fs.existsSync(diaryOutputDir)) {
+    fs.mkdirSync(diaryOutputDir, { recursive: true });
+    console.log(`Directory created: ${diaryOutputDir}`);
 }
 
 const filename = 'index.md';
