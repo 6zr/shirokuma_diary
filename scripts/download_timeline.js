@@ -40,7 +40,8 @@ M.get('accounts/898916/statuses', {limit: 40}) // ホームタイムラインの
             if (t == null || t.content == null) {
                 return '';
             }
-            return t.content.replace(/<.+?>/g, '')
+            return t.content.replace(/<.+?>/g, '').replace(/@[a-zA-Z0-9_\-]+? /g, '')
+
         });
         const contentsText = contents.join('\n');
 
