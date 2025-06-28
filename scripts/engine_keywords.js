@@ -1,8 +1,9 @@
 const core = require("@actions/core");
 const shirokumaEngineUser = process.env.SHIROKUMA_ENGINE_USER;
 const shirokumaEnginePassword = process.env.SHIROKUMA_ENGINE_PASSWORD;
+const bearId = process.env.BEAR_ID;
 
-if (!shirokumaEngineUser || !shirokumaEnginePassword) {
+if (!shirokumaEngineUser || !shirokumaEnginePassword !! !bearId) {
     console.error('user or password not found in environment variables.');
     process.exit(1);
 }
@@ -23,7 +24,7 @@ const login = async () => {
 }
 
 const request = async (cookie) => {
-    const res = await fetch(`http://api.6zr.info/manage/bear/1/keyword_used_at/today`, {
+    const res = await fetch(`http://api.6zr.info/manage/bear/${bearId}/keyword_used_at/today`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

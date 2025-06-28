@@ -6,9 +6,14 @@ on:
     # 日本時間(JST)ではUTC+9なので23時50分
     - cron: '50 14 * * *'
   workflow_dispatch: # 手動実行も可能にする
+    
+# '898916',しろくま長男,1
+# '899678',しろくまパパ,2
+# '110084966389366193',AIクマ,7
+# '111713508453320063',グウさん,8
 
 jobs:
-  shirokuma_bot:
+  make_diary:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -22,40 +27,16 @@ jobs:
       - name: Install dependencies
         run: npm install # package.jsonの通り依存ライブラリをインストール
 
-      - name: Download and record timeline
-        id: download_and_record_timeline
+    steps:
+      - name: shirokuma_bot
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
           MASTODON_ACCOUNT_ID: '898916'
-        run: |
-          # スクリプトを実行する前に npm install が行われていることを確認
-          node scripts/download_timeline.js
-
-      - name: get keywords from ShirokumaEngine
-        id: get_keywords_from_shirokuma_engine 
-        env:
+          BEAR_ID: '1'
           SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
-        run: |
-          node scripts/engine_keywords.js
-
-      - name: make Markov TEXT
-        id: make_markov_text
-        env:
-          STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
-        run: |
-          node scripts/markov.js
-
-      - name: output
-        id: output
-        env:
           BEAR_DIRNAME: 'shirokuma_bot'
-          STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
-          STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine.outputs.keywords }}
-          STEP_OUTPUT_MARKOV: ${{ steps.make_markov_text.outputs.result }}
-        run: |
-          node scripts/output.js
 
       - name: Commit and push changes
         env:
@@ -66,3 +47,184 @@ jobs:
           git add output/
           git commit -m "Automated Mastodon timeline download: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           git push || echo "Nothing to push"
+
+
+  #shirokuma_bot:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout repository
+  #      uses: actions/checkout@v4
+
+  #    - name: Set up Node.js
+  #      uses: actions/setup-node@v4
+  #      with:
+  #        node-version: '20' # 使用するNode.jsのバージョンを指定
+
+  #    - name: Install dependencies
+  #      run: npm install # package.jsonの通り依存ライブラリをインストール
+
+  #    - name: Download and record timeline
+  #      id: download_and_record_timeline
+  #      env:
+  #        MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
+  #        MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
+  #        MASTODON_ACCOUNT_ID: '898916'
+  #      run: |
+  #        # スクリプトを実行する前に npm install が行われていることを確認
+  #        node scripts/download_timeline.js
+
+  #    - name: get keywords from ShirokumaEngine
+  #      id: get_keywords_from_shirokuma_engine 
+  #      env:
+  #        BEAR_ID: '1'
+  #        SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
+  #        SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
+  #      run: |
+  #        node scripts/engine_keywords.js
+
+  #    - name: make Markov TEXT
+  #      id: make_markov_text
+  #      env:
+  #        STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
+  #      run: |
+  #        node scripts/markov.js
+
+  #    - name: output
+  #      id: output
+  #      env:
+  #        BEAR_DIRNAME: 'shirokuma_bot'
+  #        STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
+  #        STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine.outputs.keywords }}
+  #        STEP_OUTPUT_MARKOV: ${{ steps.make_markov_text.outputs.result }}
+  #      run: |
+  #        node scripts/output.js
+
+  #    - name: Commit and push changes
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub Actionsが自動で提供するトークン
+  #      run: |
+  #        git config user.name "github-actions[bot]"
+  #        git config user.email "github-actions[bot]@users.noreply.github.com"
+  #        git add output/
+  #        git commit -m "Automated Mastodon timeline download: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+  #        git push || echo "Nothing to push"
+
+  #shirokumadadbot:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout repository
+  #      uses: actions/checkout@v4
+
+  #    - name: Set up Node.js
+  #      uses: actions/setup-node@v4
+  #      with:
+  #        node-version: '20' # 使用するNode.jsのバージョンを指定
+
+  #    - name: Install dependencies
+  #      run: npm install # package.jsonの通り依存ライブラリをインストール
+
+  #    - name: Download and record timeline
+  #      id: download_and_record_timeline
+  #      env:
+  #        MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
+  #        MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
+  #        MASTODON_ACCOUNT_ID: '899678'
+  #      run: |
+  #        # スクリプトを実行する前に npm install が行われていることを確認
+  #        node scripts/download_timeline.js
+
+  #    - name: get keywords from ShirokumaEngine
+  #      id: get_keywords_from_shirokuma_engine 
+  #      env:
+  #        BEAR_ID: '2'
+  #        SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
+  #        SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
+  #      run: |
+  #        node scripts/engine_keywords.js
+
+  #    - name: make Markov TEXT
+  #      id: make_markov_text
+  #      env:
+  #        STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
+  #      run: |
+  #        node scripts/markov.js
+
+  #    - name: output
+  #      id: output
+  #      env:
+  #        BEAR_DIRNAME: 'shirokumadadbot'
+  #        STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
+  #        STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine.outputs.keywords }}
+  #        STEP_OUTPUT_MARKOV: ${{ steps.make_markov_text.outputs.result }}
+  #      run: |
+  #        node scripts/output.js
+
+  #    - name: Commit and push changes
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub Actionsが自動で提供するトークン
+  #      run: |
+  #        git config user.name "github-actions[bot]"
+  #        git config user.email "github-actions[bot]@users.noreply.github.com"
+  #        git add output/
+  #        git commit -m "Automated Mastodon timeline download: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+  #        git push || echo "Nothing to push"
+
+  #shirokumadadbot:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout repository
+  #      uses: actions/checkout@v4
+
+  #    - name: Set up Node.js
+  #      uses: actions/setup-node@v4
+  #      with:
+  #        node-version: '20' # 使用するNode.jsのバージョンを指定
+
+  #    - name: Install dependencies
+  #      run: npm install # package.jsonの通り依存ライブラリをインストール
+
+  #    - name: Download and record timeline
+  #      id: download_and_record_timeline
+  #      env:
+  #        MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
+  #        MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
+  #        MASTODON_ACCOUNT_ID: '899678'
+  #      run: |
+  #        # スクリプトを実行する前に npm install が行われていることを確認
+  #        node scripts/download_timeline.js
+
+  #    - name: get keywords from ShirokumaEngine
+  #      id: get_keywords_from_shirokuma_engine 
+  #      env:
+  #        BEAR_ID: '2'
+  #        SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
+  #        SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
+  #      run: |
+  #        node scripts/engine_keywords.js
+
+  #    - name: make Markov TEXT
+  #      id: make_markov_text
+  #      env:
+  #        STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
+  #      run: |
+  #        node scripts/markov.js
+
+  #    - name: output
+  #      id: output
+  #      env:
+  #        BEAR_DIRNAME: 'shirokumadadbot'
+  #        STEP_OUTPUT_CONTENTS_TEXT: ${{ steps.download_and_record_timeline.outputs.contents_text }}
+  #        STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine.outputs.keywords }}
+  #        STEP_OUTPUT_MARKOV: ${{ steps.make_markov_text.outputs.result }}
+  #      run: |
+  #        node scripts/output.js
+
+  #    - name: Commit and push changes
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub Actionsが自動で提供するトークン
+  #      run: |
+  #        git config user.name "github-actions[bot]"
+  #        git config user.email "github-actions[bot]@users.noreply.github.com"
+  #        git add output/
+  #        git commit -m "Automated Mastodon timeline download: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+  #        git push || echo "Nothing to push"
