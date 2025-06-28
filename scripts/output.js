@@ -33,12 +33,12 @@ if (!fs.existsSync(diaryOutputDir)) {
     console.log(`Directory created: ${diaryOutputDir}`);
 }
 
-const filename = 'index.md';
-const outputPath = path.join(outputDir, filename);
+const diaryFilename = 'index.md';
+const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
 const diary = `[${TODAY}]\n\n${MARKOV}\n\n...ってかんじの日だったワン`;
 console.log(diary);
-fs.writeFileSync(outputPath, diary);
+fs.writeFileSync(diaryOutputPath, diary);
 
 const keywords = (JSON.parse(KEYWORDS) || [])
     .map(x => ({
