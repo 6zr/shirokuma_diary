@@ -38,6 +38,28 @@ jobs:
           BEAR_DIRNAME: 'shirokuma_bot'
         run: node scripts/make_diary.js
 
+      - name: shirokumadadbot
+        env:
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
+          MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
+          MASTODON_ACCOUNT_ID: '899678'
+          BEAR_ID: '2'
+          SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
+          SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
+          BEAR_DIRNAME: 'shirokumadadbot'
+        run: node scripts/make_diary.js
+
+      - name: shirokuma_ai_bot
+        env:
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
+          MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
+          MASTODON_ACCOUNT_ID: '110084966389366193'
+          BEAR_ID: '7'
+          SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
+          SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
+          BEAR_DIRNAME: 'shirokuma_ai_bot'
+        run: node scripts/make_diary.js
+
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub Actionsが自動で提供するトークン
