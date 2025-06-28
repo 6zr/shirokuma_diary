@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path'); // pathモジュールを追加
 const Mastodon = require('mastodon-api'); // 例としてmastodon-apiライブラリを使用
 const instanceUrl = process.env.MASTODON_INSTANCE_URL;
 const accessToken = process.env.MASTODON_ACCESS_TOKEN;
