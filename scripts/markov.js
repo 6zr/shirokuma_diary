@@ -50,7 +50,7 @@ var markov = new Markov();
 builder.build(function(err, tokenizer) {
   if(err) { throw err; }
 
-  fs.readFile('data/contents.tst', 'utf8', function(err, data) {
+  fs.readFile('data/contents.txt', 'utf8', function(err, data) {
     if(err) { throw err; }
 
     var lines = data.split("\n"); // 一行ごとに分割
@@ -67,8 +67,14 @@ builder.build(function(err, tokenizer) {
     });
 
     // 10回くらい生成してみる
+    const sentences = [];
     for(var n = 0; n < 10; n++) {
-      console.log(markov.make());
+      const sentence = markov.make();
+      const point = sentence.length < 15 ? '、' : '。';
+      sentences.push(`${sentence}${point}`);
     }
+    const result = sentences.join('');
+    console.log(result);
+    fs.writeFileSync('index.md', result);
   });
 });
