@@ -87,5 +87,6 @@ builder.build(function(err, tokenizer) {
     console.log(result);
 
     fs.writeFileSync(outputPath, result);
+    console.log(`Diary saved to ${outputPath}`);
   });
 });
