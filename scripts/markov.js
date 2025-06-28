@@ -1,18 +1,9 @@
 const core = require("@actions/core");
-var fs = require('fs');
-const path = require('path'); // pathモジュールを追加
-var kuromoji = require('kuromoji');
-var builder = kuromoji.builder({
+const fs = require('fs');
+const kuromoji = require('kuromoji');
+const builder = kuromoji.builder({
   dicPath: 'node_modules/kuromoji/dict'
 });
-
-const today = new Date();
-const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const day = String(today.getDate()).padStart(2, '0');
-const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short' }).format(today);
-const shortDayOfWeek = dayOfWeek.replace('曜日', ''); // '月曜日' -> '月'
-const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
 // マルコフ連鎖の実装
 class Markov {
@@ -57,15 +48,6 @@ class Markov {
 
 var markov = new Markov();
 
-const outputDir = './diary';
-if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-    console.log(`Directory created: ${outputDir}`);
-}
-
-const filename = 'index.md';
-const outputPath = path.join(outputDir, filename);
-
 (async () => {
     try {
         const tokenizer = await new Promise((resolve, reject) => {
@@ -102,13 +84,7 @@ const outputPath = path.join(outputDir, filename);
             sentences.push(`${sentence}${point}`);
         }
         const result = sentences.join('');
-
-        const diary = `[${TODAY}]\n\n${result}\n\n...ってかんじの日だったワン`;
-        console.log(diary);
-
-        // fs.writeFileSync(outputPath, diary);
-        // console.log(`Diary saved to ${outputPath}`);
-        core.setOutput('diary', diary);
+        core.setOutput('result', result);
 
     } catch (error) {
         console.error('Error processing timeline data with Kuromoji:', error);

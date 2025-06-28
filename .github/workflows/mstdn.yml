@@ -47,8 +47,8 @@ jobs:
       - name: output
         id: output
         env:
-          STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine .outputs.keywords }}
-          STEP_OUTPUT_DIARY: ${{ steps.make_markov_text.outputs.diary }}
+          STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine.outputs.keywords }}
+          STEP_OUTPUT_DIARY: ${{ steps.make_markov_text.outputs.result }}
         run: |
           node scripts/output.js
 

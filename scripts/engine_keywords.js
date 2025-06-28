@@ -1,8 +1,4 @@
 const core = require("@actions/core");
-// const github = require("@actions/github");
-// const fs = require('fs');
-// const path = require('path'); // pathモジュールを追加
-
 const shirokumaEngineUser = process.env.SHIROKUMA_ENGINE_USER;
 const shirokumaEnginePassword = process.env.SHIROKUMA_ENGINE_PASSWORD;
 
@@ -41,6 +37,5 @@ const request = async (cookie) => {
 (async () => {
     const cookie = await login();
     const results = await request(cookie);
-    // console.log(requestResult);
     core.setOutput('keywords', results);
 })();
