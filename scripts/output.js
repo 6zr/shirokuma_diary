@@ -15,7 +15,7 @@ const KEYWORDS = process.env.STEP_OUTPUT_KEYWORDS;
 const MARKOV = process.env.STEP_OUTPUT_MARKOV;
 const BEAR_DIRNAME = process.env.BEAR_DIRNAME;
 
-const dataOutputDir = `./${BEAR_DIRNAME}/data`;
+const dataOutputDir = `./output/${BEAR_DIRNAME}/data`;
 if (!fs.existsSync(dataOutputDir)) {
     fs.mkdirSync(dataOutputDir, { recursive: true });
     console.log(`Directory created: ${dataOutputDir}`);
@@ -27,7 +27,7 @@ fs.writeFileSync(contentsOutputPath, CONTENTS_TEXT);
 console.log(`data saved to ${contentsOutputPath}`);
 
 
-const diaryOutputDir = `./${BEAR_DIRNAME}/diary`;
+const diaryOutputDir = `./output/${BEAR_DIRNAME}/diary`;
 if (!fs.existsSync(diaryOutputDir)) {
     fs.mkdirSync(diaryOutputDir, { recursive: true });
     console.log(`Directory created: ${diaryOutputDir}`);
