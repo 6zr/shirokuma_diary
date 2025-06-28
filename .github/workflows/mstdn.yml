@@ -2,9 +2,9 @@ name: Download Mastodon Timeline
 
 on:
   schedule:
-    # 毎日午前3時（UTC）に実行
-    # 日本時間（JST）では、UTC+9なので午前12時（深夜）に実行されます
-    - cron: '0 3 * * *'
+    # 毎日14時50分(UTC)に実行
+    # 日本時間(JST)ではUTC+9なので23時50分
+    - cron: '50 14 * * *'
   workflow_dispatch: # 手動実行も可能にする
 
 jobs:
