@@ -142,7 +142,7 @@ var markov = new Markov();
         console.log('Tokenizer built successfully.');
 
         // const data = fs.readFileSync('data/contents.txt', 'utf-8');
-        const data = CONTENTS_TEXT;
+        const data = contentsText;
 
         var lines = data.split("\n"); // 一行ごとに分割
         lines.forEach(function(line) {
@@ -191,7 +191,7 @@ if (!fs.existsSync(dataOutputDir)) {
 
 const contentsFilename = `contents.txt`;
 const contentsOutputPath = path.join(dataOutputDir, contentsFilename);
-fs.writeFileSync(contentsOutputPath, CONTENTS_TEXT);
+fs.writeFileSync(contentsOutputPath, contentsText);
 console.log(`data saved to ${contentsOutputPath}`);
 
 
