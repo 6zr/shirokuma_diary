@@ -25,7 +25,7 @@ M.get('accounts/898916/statuses', {limit: 40}) // ホームタイムラインの
         const timeline = resp.data;
         const timestamp = new Date().toISOString().replace(/:/g, '-').replace(/\..+/, ''); // ミリ秒を除去
         const rawFilename = `timeline-${timestamp}.json`;
-        const contentsFilename = `contents.json`;
+        const contentsFilename = `contents.txt`;
         const rawOutputPath = path.join(outputDir, rawFilename); // path.joinでパスを結合
         const contentsOutputPath = path.join(outputDir, contentsFilename);
 
@@ -36,7 +36,12 @@ M.get('accounts/898916/statuses', {limit: 40}) // ホームタイムラインの
             console.log(`Directory created: ${outputDir}`);
         }
 
-        const contents = timeline.map(t => (t == null) ? '' : (t.content || ''));
+        const contents = timeline.map(t => {
+            if (t == null || t.content == null) {
+                return '';
+            }
+            t.content.replace(/<.+?>/g, '')
+        });
         const contentsText = contents.join('\n');
 
         fs.writeFileSync(rawOutputPath, JSON.stringify(timeline, null, 2));
