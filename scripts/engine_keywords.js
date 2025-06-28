@@ -1,7 +1,7 @@
 const core = require("@actions/core");
 // const github = require("@actions/github");
 // const fs = require('fs');
-co// nst path = require('path'); // pathモジュールを追加
+// const path = require('path'); // pathモジュールを追加
 
 const shirokumaEngineUser = process.env.SHIROKUMA_ENGINE_USER;
 const shirokumaEnginePassword = process.env.SHIROKUMA_ENGINE_PASSWORD;
