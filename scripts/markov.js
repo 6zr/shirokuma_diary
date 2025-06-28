@@ -5,6 +5,14 @@ var builder = kuromoji.builder({
   dicPath: 'node_modules/kuromoji/dict'
 });
 
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, '0');
+const day = String(today.getDate()).padStart(2, '0');
+const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short' }).format(today);
+const shortDayOfWeek = dayOfWeek.replace('曜日', ''); // '月曜日' -> '月'
+const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
+
 // マルコフ連鎖の実装
 class Markov {
   constructor(n) {
@@ -93,9 +101,11 @@ const outputPath = path.join(outputDir, filename);
             sentences.push(`${sentence}${point}`);
         }
         const result = sentences.join('');
-        console.log(result);
 
-        fs.writeFileSync(outputPath, result);
+        const diary = `[${TODAY}]\n\n${result}\n\n...ってかんじの日だったワン`;
+        console.log(diary);
+
+        fs.writeFileSync(outputPath, diary);
         console.log(`Diary saved to ${outputPath}`);
     } catch (error) {
         console.error('Error processing timeline data with Kuromoji:', error);
