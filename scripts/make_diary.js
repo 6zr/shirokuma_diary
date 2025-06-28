@@ -9,7 +9,6 @@ const accountId = process.env.MASTODON_ACCOUNT_ID;
 const shirokumaEngineUser = process.env.SHIROKUMA_ENGINE_USER;
 const shirokumaEnginePassword = process.env.SHIROKUMA_ENGINE_PASSWORD;
 const bearId = process.env.BEAR_ID;
-const CONTENTS_TEXT = process.env.STEP_OUTPUT_CONTENTS_TEXT;
 
 let contentsText = '';
 let usedKeywords = [];
@@ -182,9 +181,6 @@ const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short' }).format(
 const shortDayOfWeek = dayOfWeek.replace('曜日', ''); // '月曜日' -> '月'
 const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
-const CONTENTS_TEXT = process.env.STEP_OUTPUT_CONTENTS_TEXT;
-const KEYWORDS = process.env.STEP_OUTPUT_KEYWORDS;
-const MARKOV = process.env.STEP_OUTPUT_MARKOV;
 const BEAR_DIRNAME = process.env.BEAR_DIRNAME;
 
 const dataOutputDir = `./output/${BEAR_DIRNAME}/data`;
@@ -208,7 +204,7 @@ if (!fs.existsSync(diaryOutputDir)) {
 const diaryFilename = 'index.md';
 const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
-const diary = `[${TODAY}]\n\n${MARKOV}\n\n...ってかんじの日だったワン`;
+const diary = `[${TODAY}]\n\n${markovText}\n\n...ってかんじの日だったワン`;
 console.log(diary);
 fs.writeFileSync(diaryOutputPath, diary);
 
