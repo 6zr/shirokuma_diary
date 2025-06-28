@@ -57,36 +57,48 @@ if (!fs.existsSync(outputDir)) {
 const filename = 'index.md';
 const outputPath = path.join(outputDir, filename);
 
-builder.build(function(err, tokenizer) {
-  if(err) { throw err; }
+(async () => {
+    try {
+        const tokenizer = await new Promise((resolve, reject) => {
+            builder.build(function(err, builtTokenizer) {
+                if (err) {
+                    console.error('Failed to build tokenizer:', err);
+                    return reject(err); // エラーが発生したらPromiseをrejectする
+                }
+                resolve(builtTokenizer); // 成功したらPromiseをresolveする
+            });
+        });
+        console.log('Tokenizer built successfully.');
 
-  fs.readFile('data/contents.txt', 'utf8', function(err, data) {
-    if(err) { throw err; }
+        const data = fs.readFileSync('data/contents.txt', 'utf-8');
 
-    var lines = data.split("\n"); // 一行ごとに分割
-    lines.forEach(function(line) {
-      var tokens = tokenizer.tokenize(line);
+        var lines = data.split("\n"); // 一行ごとに分割
+        lines.forEach(function(line) {
+            var tokens = tokenizer.tokenize(line);
 
-      // トークンを文中表記にすべて変換
-      var words = tokens.map(function(token) {
-        return token.surface_form;
-      });
+            // トークンを文中表記にすべて変換
+            var words = tokens.map(function(token) {
+                return token.surface_form;
+            });
 
-      // データを登録
-      markov.add(words);
-    });
+            // データを登録
+            markov.add(words);
+        });
 
-    // 10回くらい生成してみる
-    const sentences = [];
-    for(var n = 0; n < 10; n++) {
-      const sentence = markov.make();
-      const point = sentence.length < 15 ? '、' : '。';
-      sentences.push(`${sentence}${point}`);
+        // 10回くらい生成してみる
+        const sentences = [];
+        for(var n = 0; n < 10; n++) {
+            const sentence = markov.make();
+            const point = sentence.length < 15 ? '、' : '。';
+            sentences.push(`${sentence}${point}`);
+        }
+        const result = sentences.join('');
+        console.log(result);
+
+        fs.writeFileSync(outputPath, result);
+        console.log(`Diary saved to ${outputPath}`);
+    } catch (error) {
+        console.error('Error processing timeline data with Kuromoji:', error);
+        process.exit(1);
     }
-    const result = sentences.join('');
-    console.log(result);
-
-    fs.writeFileSync(outputPath, result);
-    console.log(`Diary saved to ${outputPath}`);
-  });
-});
+})();
