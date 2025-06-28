@@ -133,31 +133,31 @@ if (!instanceUrl || !accessToken || !accountId) {
         });
     });
 
-    try {
-        const lines = contentsText.split("\n"); // 一行ごとに分割
-        lines.forEach(function(line) {
-            const tokens = tokenizer.tokenize(line);
-            const words = tokens.map(function(token) {
-                return token.surface_form;
+    const markovText = (() => {
+        try {
+            const lines = contentsText.split("\n"); // 一行ごとに分割
+            lines.forEach(function(line) {
+                const tokens = tokenizer.tokenize(line);
+                const words = tokens.map(function(token) {
+                    return token.surface_form;
+                });
+                markov.add(words);
             });
-            markov.add(words);
-        });
 
-        // 10回くらい生成してみる
-        const sentences = [];
-        for(var n = 0; n < 10; n++) {
-            const sentence = markov.make();
-            const point = sentence.length < 15 ? '、' : '。';
-            sentences.push(`${sentence}${point}`);
+            // 10回くらい生成してみる
+            const sentences = [];
+            for(var n = 0; n < 10; n++) {
+                const sentence = markov.make();
+                const point = sentence.length < 15 ? '、' : '。';
+                sentences.push(`${sentence}${point}`);
+            }
+            return sentences.join('');
+        } catch (error) {
+            console.error('Error processing timeline data with Kuromoji:', error);
+            process.exit(1);
+            return '';
         }
-        const markovText = sentences.join('');
-
-    } catch (error) {
-        console.error('Error processing timeline data with Kuromoji:', error);
-        process.exit(1);
-    }
-
-
+    })();
 
     const dataOutputDir = `./output/${bearDirname}/data`;
     if (!fs.existsSync(dataOutputDir)) {
