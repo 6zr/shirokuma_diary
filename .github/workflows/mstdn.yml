@@ -23,6 +23,7 @@ jobs:
         run: npm install # package.jsonの通り依存ライブラリをインストール
 
       - name: Download and record timeline
+        id: download_and_record_timeline
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
@@ -31,6 +32,7 @@ jobs:
           node scripts/download_timeline.js
 
       - name: get keywords from ShirokumaEngine
+        id: get_keywords_from_shirokuma_engine 
         env:
           SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
@@ -38,10 +40,15 @@ jobs:
           node scripts/engine_keywords.js
 
       - name: make Markov TEXT
+        id: make_markov_text
         run: |
           node scripts/markov.js
 
       - name: output
+        id: output
+        env:
+          STEP_OUTPUT_KEYWORDS: ${{ steps.get_keywords_from_shirokuma_engine .outputs.keywords }}
+          STEP_OUTPUT_DIARY: ${{ steps.make_markov_text.outputs.diary }}
         run: |
           node scripts/output.js
 
