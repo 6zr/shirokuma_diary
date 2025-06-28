@@ -75,6 +75,7 @@ builder.build(function(err, tokenizer) {
     }
     const result = sentences.join('');
     console.log(result);
-    fs.writeFileSync('index.md', result);
+
+    fs.writeFileSync('./index.md', result);
   });
 });
