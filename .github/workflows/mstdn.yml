@@ -31,6 +31,10 @@ jobs:
           # スクリプトを実行する前に npm install が行われていることを確認
           node scripts/download_timeline.js # ここであなたのスクリプトを呼び出す
 
+      - name: make Markov TEXT
+        run: |
+          node scripts/markov.js
+
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub Actionsが自動で提供するトークン
