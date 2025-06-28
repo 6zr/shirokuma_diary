@@ -28,41 +28,8 @@ jobs:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }} # これもSecretにすること推奨
         run: |
-          # ここにタイムラインをダウンロードしてファイルに保存するスクリプトを実行
-          # 例: node scripts/download_timeline.js
-          # スクリプト内で env.MASTODON_ACCESS_TOKEN と env.MASTODON_INSTANCE_URL を使用する
-          # ダウンロードしたデータをファイルに書き込み（例: timeline.json）
-          # Gitにコミット・プッシュするコマンドを実行
-          echo "Downloading Mastodon timeline..."
-          node -e "
-            const fs = require('fs');
-            const Mastodon = require('mastodon-api'); // 例としてmastodon-apiライブラリを使用
-            const instanceUrl = process.env.MASTODON_INSTANCE_URL;
-            const accessToken = process.env.MASTODON_ACCESS_TOKEN;
-
-            if (!instanceUrl || !accessToken) {
-              console.error('Mastodon instance URL or access token not found in environment variables.');
-              process.exit(1);
-            }
-
-            const M = new Mastodon({
-              access_token: accessToken,
-              api_url: \`https://\${instanceUrl}/api/v1/\`
-            });
-
-            M.get('timelines/home', {}) // ホームタイムラインの例
-              .then(resp => {
-                const timeline = resp.data;
-                const timestamp = new Date().toISOString().replace(/:/g, '-');
-                const filename = \`data/timeline-\${timestamp}.json\`;
-                fs.writeFileSync(filename, JSON.stringify(timeline, null, 2));
-                console.log(\`Timeline saved to \${filename}\`);
-              })
-              .catch(err => {
-                console.error('Error downloading timeline:', err);
-                process.exit(1);
-              });
-          "
+          # スクリプトを実行する前に npm install が行われていることを確認
+          node scripts/download_timeline.js # ここであなたのスクリプトを呼び出す
 
       - name: Commit and push changes
         env:
