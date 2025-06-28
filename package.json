@@ -1,0 +1,13 @@
+{
+  "name": "mastodon-timeline-processor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "download": "node scripts/download_timeline.js",
+    "markov": "node scripts/markov.js"
+  },
+  "dependencies": {
+    "mastodon-api": "^1.3.0",
+    "kuromoji": "^0.1.2"
+  }
+}

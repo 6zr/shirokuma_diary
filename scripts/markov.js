@@ -1,7 +1,7 @@
 var fs = require('fs');
 var kuromoji = require('kuromoji');
 var builder = kuromoji.builder({
-  dicPath: 'node_modules/kuromoji/dist/dict'
+  dicPath: 'node_modules/kuromoji/dict'
 });
 
 // マルコフ連鎖の実装
