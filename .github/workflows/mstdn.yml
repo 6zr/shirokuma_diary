@@ -27,7 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install # package.jsonの通り依存ライブラリをインストール
 
-    steps:
       - name: shirokuma_bot
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
