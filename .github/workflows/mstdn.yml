@@ -19,8 +19,9 @@ jobs:
         with:
           node-version: '20' # 使用するNode.jsのバージョンを指定
 
-      # - name: Install dependencies
-      #   run: npm install your-mastodon-api-library # 使用するNode.jsライブラリのインストール
+      - name: Install dependencies
+        # run: npm install your-mastodon-api-library # 使用するNode.jsライブラリのインストール
+        run: npm install mastodon-api # 使用するNode.jsライブラリのインストール
 
       - name: Download and record timeline
         env:
