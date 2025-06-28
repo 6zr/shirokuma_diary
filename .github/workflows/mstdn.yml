@@ -25,14 +25,25 @@ jobs:
       - name: Download and record timeline
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
-          MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }} # これもSecretにすること推奨
+          MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
         run: |
           # スクリプトを実行する前に npm install が行われていることを確認
-          node scripts/download_timeline.js # ここであなたのスクリプトを呼び出す
+          node scripts/download_timeline.js
+
+      - name: get keywords from ShirokumaEngine
+        env:
+          SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
+          SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
+        run: |
+          node scripts/engine_keywords.js
 
       - name: make Markov TEXT
         run: |
           node scripts/markov.js
+
+      - name: output
+        run: |
+          node scripts/output.js
 
       - name: Commit and push changes
         env:
