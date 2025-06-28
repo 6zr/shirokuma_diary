@@ -1,4 +1,4 @@
-name: Download Mastodon Timeline
+name: Generate Shirokuma Diary
 
 on:
   schedule:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch: # 手動実行も可能にする
 
 jobs:
-  download_timeline:
+  shirokuma_bot:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

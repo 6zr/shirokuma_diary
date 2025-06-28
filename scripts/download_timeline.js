@@ -48,7 +48,7 @@ M.get('accounts/898916/statuses', {limit: 40}) // ホームタイムラインの
         });
         const contentsText = contents.join('\n');
 
-        fs.writeFileSync(rawOutputPath, JSON.stringify(timeline, null, 2));
+        // fs.writeFileSync(rawOutputPath, JSON.stringify(timeline, null, 2));
         fs.writeFileSync(contentsOutputPath, contentsText);
         console.log(`Timeline saved to ${rawOutputPath}, ${contentsOutputPath}`);
     })

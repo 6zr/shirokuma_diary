@@ -1,3 +1,4 @@
+const core = require("@actions/core");
 var fs = require('fs');
 const path = require('path'); // pathモジュールを追加
 var kuromoji = require('kuromoji');
@@ -105,8 +106,10 @@ const outputPath = path.join(outputDir, filename);
         const diary = `[${TODAY}]\n\n${result}\n\n...ってかんじの日だったワン`;
         console.log(diary);
 
-        fs.writeFileSync(outputPath, diary);
-        console.log(`Diary saved to ${outputPath}`);
+        // fs.writeFileSync(outputPath, diary);
+        // console.log(`Diary saved to ${outputPath}`);
+        core.setOutput('diary', diary);
+
     } catch (error) {
         console.error('Error processing timeline data with Kuromoji:', error);
         process.exit(1);
