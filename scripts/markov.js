@@ -1,4 +1,5 @@
 var fs = require('fs');
+const path = require('path'); // pathモジュールを追加
 var kuromoji = require('kuromoji');
 var builder = kuromoji.builder({
   dicPath: 'node_modules/kuromoji/dict'
@@ -47,6 +48,15 @@ class Markov {
 
 var markov = new Markov();
 
+const outputDir = './diary';
+if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+    console.log(`Directory created: ${outputDir}`);
+}
+
+const filename = 'index.md';
+const outputPath = path.join(outputDir, filename);
+
 builder.build(function(err, tokenizer) {
   if(err) { throw err; }
 
@@ -76,6 +86,6 @@ builder.build(function(err, tokenizer) {
     const result = sentences.join('');
     console.log(result);
 
-    fs.writeFileSync('./index.md', result);
+    fs.writeFileSync(outputPath, result);
   });
 });
