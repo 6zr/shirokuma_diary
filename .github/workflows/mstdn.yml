@@ -36,6 +36,7 @@ jobs:
           SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
           BEAR_DIRNAME: 'shirokuma_bot'
+        run: node scripts/make_diary.js
 
       - name: Commit and push changes
         env:
