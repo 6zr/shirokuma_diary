@@ -193,4 +193,21 @@ if (!instanceUrl || !accessToken || !accountId) {
         .join('\n');
     ;
     console.log(keywords);
+
+
+    const imageCompletion = await client.chat.completions.create({
+        'model': MODEL,
+        'max_tokens' : 1024,
+        'temperature' : 0.9,
+        'messages': [{
+            'role': 'developer',
+            'content': '絵日記に使う縦横256pxの画像を生成してbase64文字列で返してください。画風は子供の手描きのようなデフォルメ・水彩で、日記の著者も含め人物は描かないこと。',
+        }, {
+            'role': 'user',
+            'content': `下記が日記です。特徴的な一場面を選んで画像にしてください。"""\n${markovText}\n"""`,
+        }],
+    });
+    if (imageCompletion.choices != null && imageCompletion.choices.length > 0) {
+        fs.writeFileSync(diaryOutputPath, `${diary}\n\n<img src="${imageCompletion.choices[0].message.content}">`);
+    }
 })();

@@ -14,6 +14,14 @@ if (!instanceUrl || !accessToken || !accountId) {
     process.exit(1);
 }
 
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, '0');
+const day = String(today.getDate()).padStart(2, '0');
+const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short' }).format(today);
+const shortDayOfWeek = dayOfWeek.replace('曜日', ''); // '月曜日' -> '月'
+const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
+
 (async () => {
     const M = new Mastodon({
         access_token: accessToken,
@@ -71,23 +79,39 @@ if (!instanceUrl || !accessToken || !accountId) {
     const client = new OpenAI({ apiKey: openaiApikey });
     const MODEL = "gpt-4.1-mini";
 
-    const messages = [{
-        'role': 'developer',
-        'content': 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。', // エンジンから取得したいところ
-    }, {
-        'role': 'user',
-        'content': `下記は今日のあなたのSNS投稿の列挙です。印象深いいくつかの内容を上手くミックスして、口調はそのまま、500文字〜800文字程度の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
-    }];
-
-    const completion = await client.chat.completions.create({
+    const textCompletion = await client.chat.completions.create({
         'model': MODEL,
         'max_tokens' : 1024,
         'temperature' : 0.9,
-        'messages': messages,
+        'messages': [{
+            'role': 'developer',
+            'content': 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。', // エンジンから取得したいところ
+        }, {
+            'role': 'user',
+            'content': `下記は今日のあなたのSNS投稿の列挙です。印象深いいくつかの内容を上手くミックスして、口調はそのまま、500文字〜800文字程度の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
+        }],
     });
 
-    if (completion.choices != null && completion.choices.length > 0) {
-        const diary = completion.choices[0].message.content;
-        fs.writeFileSync(diaryOutputPath, diary);
+    if (textCompletion.choices == null || textCompletion.choices.length < 1) {
+        return;
     }
+    const diaryText = textCompletion.choices[0].message.content;
+
+    const imageCompletion = await client.chat.completions.create({
+        'model': MODEL,
+        'max_tokens' : 1024,
+        'temperature' : 0.9,
+        'messages': [{
+            'role': 'developer',
+            'content': '絵日記に使う縦横256pxの画像を生成してbase64文字列で返してください。画風は子供の手描きのようなデフォルメ・水彩で、日記の著者も含め人物は描かないこと。',
+        }, {
+            'role': 'user',
+            'content': `下記が日記です。特徴的な一場面を選んで画像にしてください。"""\n${diaryText}\n"""`,
+        }],
+    });
+
+    if (imageCompletion.choices == null || imageCompletion.choices.length < 1) {
+        fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}`);
+    }
+    fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n<img src="${imageCompletion.choices[0].message.content}">`);
 })();
