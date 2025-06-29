@@ -76,10 +76,9 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
     const client = new OpenAI({ apiKey: openaiApikey });
-    const MODEL = "gpt-4.1-mini";
 
     const textCompletion = await client.chat.completions.create({
-        'model': MODEL,
+        'model':"gpt-4.1-mini",
         'max_tokens' : 1024,
         'temperature' : 0.9,
         'messages': [{
@@ -96,21 +95,15 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     }
     const diaryText = textCompletion.choices[0].message.content;
 
-    const imageCompletion = await client.chat.completions.create({
-        'model': MODEL,
-        'max_tokens' : 1024,
-        'temperature' : 0.9,
-        'messages': [{
-            'role': 'developer',
-            'content': '絵日記に使う縦横256pxの画像を生成してbase64文字列で返してください。画風は子供の手描きのようなデフォルメ・水彩で、日記の著者も含め人物は描かないこと。',
-        }, {
-            'role': 'user',
-            'content': `下記が日記です。特徴的な一場面を選んで画像にしてください。"""\n${diaryText}\n"""`,
-        }],
+    const imageCompletion = await client.images.generate({
+        'model':'gpt-image-1',
+        'prompt': `絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者も含め人物は描かないこと。 """\n${diaryText}\n"""`,
+        size: '1024x1024',
+        quality: 'low',
     });
 
-    if (imageCompletion.choices == null || imageCompletion.choices.length < 1) {
+    if (imageCompletion.data == null || imageCompletion.data.length < 1) {
         fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}`);
     }
-    fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n<img src="${imageCompletion.choices[0].message.content}">`);
+    fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n<img src="${imageCompletion.data[0]['b64_json']}">`);
 })();
