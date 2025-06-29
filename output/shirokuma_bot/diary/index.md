@@ -1,5 +1,7 @@
 [2025/06/29(日)]
 
-やっぱり冷や奴と美味しいワン、そろそろおやつかワン！ワン…わかるかワン！ワン！ワン。水は鮮やかなワン、水はほうえんの詩人♪ワン、ひつじ！ワン、サンタってワン、ポテトチップスに惑わされるなって好みが感じだねワン。ザボン狩りにいきたいワン！ワン。見るの話かワン…、やっぱり冷や奴とコアラなやむイチ　ズッキーニ 観光客向けの価格設定が感じだねワン。
+まさに腐っても華やかですワン、スターもしくはミスターの食感が高すぎるワン。クヌソワン、ひまワン、たいくつワン、れんこんショウガ豆乳スムージーだねワン。ももは方円の食感が柔らかすぎてもいいよワン。見るの香りにも三年だねワン、ワホホ 美味しさが分かれるワン…。見るの狩人ひつじ～♪アア～氷河の食敵～　矢吹奈子　ＶＳ　ＶＳ　ワン。
 
 ...ってかんじの日だったワン
+
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAADwCAYAAAD7zLu7AAAAg0lEQVR4nO3BMQEAAAjDMO5fNPKQhAhITgIvVzzwQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABc9ZqCAF4N7H4AAAAASUVORK5CYII=">
