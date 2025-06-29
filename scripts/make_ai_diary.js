@@ -1,10 +1,7 @@
 const fs = require('fs');
 const path = require('path'); // pathモジュールを追加
 const Mastodon = require('mastodon-api'); // 例としてmastodon-apiライブラリを使用
-const {
-    OpenAIApi,
-    ChatCompletionRequestMessageRoleEnum,
-} = require('openai');
+const OpenAI = require('openai');
 
 const instanceUrl = process.env.MASTODON_INSTANCE_URL;
 const accessToken = process.env.MASTODON_ACCESS_TOKEN;
@@ -71,18 +68,18 @@ if (!instanceUrl || !accessToken || !accountId) {
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
     // const configuration = new Configuration({ apiKey: openaiApikey });
-    const openai = new OpenAIApi({ apiKey: openaiApikey });
+    const client = new OpenAI({ apiKey: openaiApikey });
     const MODEL = "gpt-4.1-mini";
 
     const messages = [{
-        'role': ChatCompletionRequestMessageRoleEnum.System,
+        'role': 'developer',
         'content': 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。', // エンジンから取得したいところ
     }, {
-        'role': ChatCompletionRequestMessageRoleEnum.User,
+        'role': 'user',
         'content': `下記は今日のあなたのSNS投稿の列挙です。これを踏まえ、口調などはそのままに、特に印象深かった場面を300文字〜500文字の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
     }];
 
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completion.create({
         'model': MODEL,
         'max_tokens' : 128,
         'temperature' : 0.9,
