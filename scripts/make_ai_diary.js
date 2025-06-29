@@ -76,7 +76,7 @@ if (!instanceUrl || !accessToken || !accountId) {
         'content': 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。', // エンジンから取得したいところ
     }, {
         'role': 'user',
-        'content': `下記は今日のあなたのSNS投稿の列挙です。これを踏まえ、口調などはそのままに、特に印象深かった場面を300文字〜500文字の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
+        'content': `下記は今日のあなたのSNS投稿の列挙です。印象深いいくつかの内容を含めて、口調はそのまま、500文字〜800文字程度の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
     }];
 
     const completion = await client.chat.completions.create({
