@@ -86,8 +86,8 @@ if (!instanceUrl || !accessToken || !accountId) {
         'messages': messages,
     });
 
-    if (completion.data.choices != null && completion.data.choices.length > 0) {
-        const diary = completion.data.choices[0].message.content;
+    if (completion.choices != null && completion.choices.length > 0) {
+        const diary = completion.choices[0].message.content;
         fs.writeFileSync(diaryOutputPath, diary);
     }
 })();
