@@ -108,6 +108,6 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     }
     const imageFilename = 'image.png';
     const imageOutputPath = path.join(diaryOutputDir, imageFilename);
-    fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json']);
+    fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json'], { encoding: "base64" });
     fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n![image](image.png)`);
 })();
