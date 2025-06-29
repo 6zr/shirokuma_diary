@@ -75,7 +75,6 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     const diaryFilename = 'index.md';
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
-    // const configuration = new Configuration({ apiKey: openaiApikey });
     const client = new OpenAI({ apiKey: openaiApikey });
     const MODEL = "gpt-4.1-mini";
 

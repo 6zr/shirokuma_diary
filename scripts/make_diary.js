@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path'); // pathモジュールを追加
 const Mastodon = require('mastodon-api'); // 例としてmastodon-apiライブラリを使用
 const kuromoji = require('kuromoji');
+const OpenAI = require('openai');
 
 const instanceUrl = process.env.MASTODON_INSTANCE_URL;
 const accessToken = process.env.MASTODON_ACCESS_TOKEN;
@@ -11,6 +12,7 @@ const shirokumaEngineUser = process.env.SHIROKUMA_ENGINE_USER;
 const shirokumaEnginePassword = process.env.SHIROKUMA_ENGINE_PASSWORD;
 const bearId = process.env.BEAR_ID;
 const bearDirname = process.env.BEAR_DIRNAME;
+const openaiApikey = process.env.OPENAI_APIKEY;
 
 const today = new Date();
 const year = today.getFullYear();
@@ -194,7 +196,8 @@ if (!instanceUrl || !accessToken || !accountId) {
     ;
     console.log(keywords);
 
-
+    const client = new OpenAI({ apiKey: openaiApikey });
+    const MODEL = "gpt-4.1-mini";
     const imageCompletion = await client.chat.completions.create({
         'model': MODEL,
         'max_tokens' : 1024,
