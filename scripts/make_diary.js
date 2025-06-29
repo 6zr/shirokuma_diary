@@ -196,14 +196,14 @@ if (!instanceUrl || !accessToken || !accountId) {
     ;
     console.log(keywords);
 
-    // const client = new OpenAI({ apiKey: openaiApikey });
-    // const imageCompletion = await client.images.generate({
-    //     'model':'gpt-image-1',
-    //     'prompt': `絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者も含め人物は描かないこと。 """\n${markovText}\n"""`,
-    //     size: '1024x1024',
-    //     quality: 'low',
-    // });
-    // if (imageCompletion.data != null && imageCompletion.data.length > 0) {
-    //     fs.writeFileSync(diaryOutputPath, `${diary}\n\n<img src="${imageCompletion.data[0]['b64_json']}">`);
-    // }
+    const client = new OpenAI({ apiKey: openaiApikey });
+    const imageCompletion = await client.images.generate({
+        'model':'gpt-image-1',
+        'prompt': `絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者も含め人物は描かないこと。 """\n${markovText}\n"""`,
+        size: '1024x1024',
+        quality: 'low',
+    });
+    if (imageCompletion.data != null && imageCompletion.data.length > 0) {
+        fs.writeFileSync(diaryOutputPath, `${diary}\n\n<img width="360px" src="data:image/png;base64,${imageCompletion.data[0]['b64_json']}">`);
+    }
 })();
