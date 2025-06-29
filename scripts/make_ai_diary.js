@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path'); // pathモジュールを追加
 const Mastodon = require('mastodon-api'); // 例としてmastodon-apiライブラリを使用
 const {
-    Configuration,
     OpenAIApi,
     ChatCompletionRequestMessageRoleEnum,
 } = require('openai');
@@ -71,8 +70,8 @@ if (!instanceUrl || !accessToken || !accountId) {
     const diaryFilename = 'index.md';
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
-    const configuration = new Configuration({ apiKey: openaiApikey });
-    const openai = new OpenAIApi(configuration);
+    // const configuration = new Configuration({ apiKey: openaiApikey });
+    const openai = new OpenAIApi({ apiKey: openaiApikey });
     const MODEL = "gpt-4.1-mini";
 
     const messages = [{
