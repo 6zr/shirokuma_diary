@@ -105,5 +105,5 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     if (imageCompletion.data == null || imageCompletion.data.length < 1) {
         fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}`);
     }
-    fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n<img src="${imageCompletion.data[0]['b64_json']}">`);
+    fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n<img width="360px" src="data:image/png;base64,${imageCompletion.data[0]['b64_json']}">`);
 })();
