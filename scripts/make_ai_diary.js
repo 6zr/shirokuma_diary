@@ -81,7 +81,7 @@ if (!instanceUrl || !accessToken || !accountId) {
 
     const completion = await client.chat.completions.create({
         'model': MODEL,
-        'max_tokens' : 128,
+        'max_tokens' : 1024,
         'temperature' : 0.9,
         'messages': messages,
     });
