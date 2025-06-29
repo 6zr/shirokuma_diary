@@ -193,5 +193,4 @@ if (!instanceUrl || !accessToken || !accountId) {
         .join('\n');
     ;
     console.log(keywords);
-
 })();

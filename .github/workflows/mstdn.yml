@@ -55,10 +55,9 @@ jobs:
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
           MASTODON_ACCOUNT_ID: '110084966389366193'
           BEAR_ID: '7'
-          SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
-          SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
+          OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_DIRNAME: 'shirokuma_ai_bot'
-        run: node scripts/make_diary.js
+        run: node scripts/make_ai_diary.js
 
       - name: Commit and push changes
         env:
