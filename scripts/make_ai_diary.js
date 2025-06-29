@@ -79,7 +79,7 @@ if (!instanceUrl || !accessToken || !accountId) {
         'content': `下記は今日のあなたのSNS投稿の列挙です。これを踏まえ、口調などはそのままに、特に印象深かった場面を300文字〜500文字の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
     }];
 
-    const completion = await client.chat.completion.create({
+    const completion = await client.chat.completions.create({
         'model': MODEL,
         'max_tokens' : 128,
         'temperature' : 0.9,
