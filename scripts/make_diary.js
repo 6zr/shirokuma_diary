@@ -17,14 +17,14 @@ const CONFIG = {
         bearId: '1',
         bearDirname: 'shirokuma_bot',
         diaryPostfix: '\n\n...ってかんじの日だったワン',
-        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者の姿は描かないこと。',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を子供がクレヨンで描いたような絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
     shirokumadadbot: {
         accountId: '899678',
         bearId: '2',
         bearDirname: 'shirokumadadbot',
         diaryPostfix: '\n\n...ってかんじの日でしたなワン',
-        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を"趣味の油絵"といった雰囲気の絵にしてください。ただし日記の著者の姿は描かないこと。',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を"素人の趣味の油絵"といった雰囲気の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
 };
 const config = CONFIG[process.env.BEAR_NAME];

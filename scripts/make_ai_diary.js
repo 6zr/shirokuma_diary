@@ -13,7 +13,7 @@ const CONFIG = {
         // bearId: '7',
         bearDirname: 'shirokuma_ai_bot',
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
-        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者の姿は描かないこと。',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面をサイバーで古めかしいローポリCG風の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
 };
 const config = CONFIG[process.env.BEAR_NAME];
