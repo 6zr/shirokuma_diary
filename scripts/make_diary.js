@@ -7,12 +7,27 @@ const OpenAI = require('openai');
 
 const instanceUrl = process.env.MASTODON_INSTANCE_URL;
 const accessToken = process.env.MASTODON_ACCESS_TOKEN;
-const accountId = process.env.MASTODON_ACCOUNT_ID;
 const shirokumaEngineUser = process.env.SHIROKUMA_ENGINE_USER;
 const shirokumaEnginePassword = process.env.SHIROKUMA_ENGINE_PASSWORD;
-const bearId = process.env.BEAR_ID;
-const bearDirname = process.env.BEAR_DIRNAME;
 const openaiApikey = process.env.OPENAI_APIKEY;
+
+const CONFIG = {
+    shirokuma_bot: {
+        accountId: '898916',
+        bearId: '1',
+        bearDirname: 'shirokuma_bot',
+        diaryPostfix: '\n\n...ってかんじの日だったワン',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者の姿は描かないこと。',
+    },
+    shirokumadadbot: {
+        accountId: '899678',
+        bearId: '2',
+        bearDirname: 'shirokumadadbot',
+        diaryPostfix: '\n\n...ってかんじの日でしたなワン',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を"趣味の油絵"といった雰囲気の絵にしてください。ただし日記の著者の姿は描かないこと。',
+    },
+};
+const config = CONFIG[process.env.BEAR_NAME];
 
 const today = new Date();
 const year = today.getFullYear();
@@ -56,13 +71,6 @@ class Markov {
 }
 // /マルコフ連鎖の実装========================================
 
-
-if (!instanceUrl || !accessToken || !accountId) {
-    console.error('Mastodon instance URL or access token not found in environment variables.');
-    process.exit(1);
-}
-
-
 (async () => {
 
     const M = new Mastodon({
@@ -71,7 +79,7 @@ if (!instanceUrl || !accessToken || !accountId) {
     });
 
     const mastodonResponse = await new Promise((resolve, reject) => {
-        M.get(`accounts/${accountId}/statuses`, {limit: 40})
+        M.get(`accounts/${config.accountId}/statuses`, {limit: 40})
             .then(response => resolve(response))
             .catch(error => {
                 console.error('Error downloading timeline:', err);
@@ -85,15 +93,23 @@ if (!instanceUrl || !accessToken || !accountId) {
             });
     });
 
-    const contents = mastodonResponse.data.map(t => {
-        if (t == null || t.content == null) {
-            return '';
-        }
-        return t.content
-            .replace(/<.+?>/g, '')
-            .replace(/@[a-zA-Z0-9_\-]+? /g, '')
-            .replace(/http.*$/g, '')
-    });
+    const nowDate = new Date();
+    const oneDayAgo = new Date(nowDate.getTime() - (24 * 60 * 60 * 1000)); // 24時間前
+
+    const contents = mastodonResponse.data
+        .filter(status => {
+            const createdAt = new Date(status.created_at);
+            return createdAt >= oneDayAgo;
+        })
+        .map(status => {
+            if (status == null || status.content == null) {
+                return '';
+            }
+            return status.content
+                .replace(/<.+?>/g, '')
+                .replace(/@[a-zA-Z0-9_\-]+? /g, '')
+                .replace(/http.*$/g, '')
+        });
     const contentsText = contents.join('\n');
 
     const engineLoginResponse = await fetch(`http://api.6zr.info/login`, {
@@ -109,7 +125,7 @@ if (!instanceUrl || !accessToken || !accountId) {
     });
     const cookie = engineLoginResponse.headers.get('set-cookie');
 
-    const res = await fetch(`http://api.6zr.info/manage/bear/${bearId}/keyword_used_at/today`, {
+    const res = await fetch(`http://api.6zr.info/manage/bear/${config.bearId}/keyword_used_at/today`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -161,7 +177,7 @@ if (!instanceUrl || !accessToken || !accountId) {
         }
     })();
 
-    const dataOutputDir = `./output/${bearDirname}/data`;
+    const dataOutputDir = `./output/${config.bearDirname}/data`;
     if (!fs.existsSync(dataOutputDir)) {
         fs.mkdirSync(dataOutputDir, { recursive: true });
         console.log(`Directory created: ${dataOutputDir}`);
@@ -172,7 +188,7 @@ if (!instanceUrl || !accessToken || !accountId) {
     fs.writeFileSync(contentsOutputPath, contentsText);
     console.log(`data saved to ${contentsOutputPath}`);
 
-    const diaryOutputDir = `./output/${bearDirname}/diary`;
+    const diaryOutputDir = `./output/${config.bearDirname}/diary`;
     if (!fs.existsSync(diaryOutputDir)) {
         fs.mkdirSync(diaryOutputDir, { recursive: true });
         console.log(`Directory created: ${diaryOutputDir}`);
@@ -181,7 +197,7 @@ if (!instanceUrl || !accessToken || !accountId) {
     const diaryFilename = 'index.md';
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
-    const diary = `[${TODAY}]\n\n${markovText}\n\n...ってかんじの日だったワン`;
+    const diary = `[${TODAY}]\n\n${markovText}${config.diaryPostfix}`;
     console.log(diary);
     fs.writeFileSync(diaryOutputPath, diary);
 
@@ -199,7 +215,7 @@ if (!instanceUrl || !accessToken || !accountId) {
     const client = new OpenAI({ apiKey: openaiApikey });
     const imageCompletion = await client.images.generate({
         'model':'gpt-image-1',
-        'prompt': `絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者も含め人物は描かないこと。 """\n${markovText}\n"""`,
+        'prompt': `${config.imagePromptPrefix}\n"""\n${markovText}\n"""`,
         size: '1024x1024',
         quality: 'low',
     });

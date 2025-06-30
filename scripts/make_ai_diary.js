@@ -5,14 +5,18 @@ const OpenAI = require('openai');
 
 const instanceUrl = process.env.MASTODON_INSTANCE_URL;
 const accessToken = process.env.MASTODON_ACCESS_TOKEN;
-const accountId = process.env.MASTODON_ACCOUNT_ID;
-const bearDirname = process.env.BEAR_DIRNAME;
 const openaiApikey = process.env.OPENAI_APIKEY;
 
-if (!instanceUrl || !accessToken || !accountId) {
-    console.error('Mastodon instance URL or access token not found in environment variables.');
-    process.exit(1);
-}
+const CONFIG = {
+    shirokuma_ai_bot: {
+        accountId: '110084966389366193',
+        // bearId: '7',
+        bearDirname: 'shirokuma_ai_bot',
+        // diaryPostfix: '\n\n...ってかんじの日だったワン',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者の姿は描かないこと。',
+    },
+};
+const config = CONFIG[process.env.BEAR_NAME];
 
 const today = new Date();
 const year = today.getFullYear();
@@ -29,7 +33,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     });
 
     const mastodonResponse = await new Promise((resolve, reject) => {
-        M.get(`accounts/${accountId}/statuses`, {limit: 40})
+        M.get(`accounts/${config.accountId}/statuses`, {limit: 40})
             .then(response => resolve(response))
             .catch(error => {
                 console.error('Error downloading timeline:', err);
@@ -55,7 +59,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     const contentsText = contents.join('\n');
 
 
-    const dataOutputDir = `./output/${bearDirname}/data`;
+    const dataOutputDir = `./output/${config.bearDirname}/data`;
     if (!fs.existsSync(dataOutputDir)) {
         fs.mkdirSync(dataOutputDir, { recursive: true });
         console.log(`Directory created: ${dataOutputDir}`);
@@ -66,7 +70,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     fs.writeFileSync(contentsOutputPath, contentsText);
     console.log(`data saved to ${contentsOutputPath}`);
 
-    const diaryOutputDir = `./output/${bearDirname}/diary`;
+    const diaryOutputDir = `./output/${config.bearDirname}/diary`;
     if (!fs.existsSync(diaryOutputDir)) {
         fs.mkdirSync(diaryOutputDir, { recursive: true });
         console.log(`Directory created: ${diaryOutputDir}`);
@@ -86,7 +90,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
             'content': 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。', // エンジンから取得したいところ
         }, {
             'role': 'user',
-            'content': `下記は今日のあなたのSNS投稿の列挙です。印象深いいくつかの内容を上手くミックスして、口調はそのまま、500文字〜800文字程度の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
+            'content': `下記は今日のあなたのSNS投稿の列挙です。印象深いいくつかの内容を上手くミックスして、口調はそのまま、400文字程度の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
         }],
     });
 
@@ -97,7 +101,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
     const imageCompletion = await client.images.generate({
         'model':'gpt-image-1',
-        'prompt': `絵日記用に、下記の日記から特徴的な場面を子供の手描きのような水彩画にしてください。ただし日記の著者も含め人物は描かないこと。 """\n${diaryText}\n"""`,
+        'prompt': `${config.imagePromptPrefix}\n"""\n${diaryText}\n"""`,
         size: '1024x1024',
         quality: 'low',
     });
