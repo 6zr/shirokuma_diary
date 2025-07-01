@@ -26,6 +26,13 @@ const CONFIG = {
         diaryPostfix: '\n\n...ってかんじの日でしたなワン',
         imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を"素人の趣味の油絵"といった雰囲気の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
+    ochisou_bot: {
+        accountId: '109289980042219018',
+        bearId: '6',
+        bearDirname: 'ochisou_bot',
+        diaryPostfix: '\n\n...つまるところ〜ワン',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を幼児が色鉛筆でぐりぐりっと書いたような画風の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
+    },
 };
 const config = CONFIG[process.env.BEAR_NAME];
 

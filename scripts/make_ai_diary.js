@@ -15,6 +15,13 @@ const CONFIG = {
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
         imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面をサイバーで古めかしいローポリCG風の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
+    goosan_bot: {
+        accountId: '111713508453320063',
+        // bearId: '8',
+        bearDirname: 'goosan_bot',
+        // diaryPostfix: '\n\n...ってかんじの日だったワン',
+        imagePromptPrefix: '下記の日記から特徴的な場面を遠景の写真にしてください。遠くに小さく日記の著者(茶色の熊)も描いてください。',
+    },
 };
 const config = CONFIG[process.env.BEAR_NAME];
 
