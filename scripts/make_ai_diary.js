@@ -20,7 +20,7 @@ const CONFIG = {
         // bearId: '8',
         bearDirname: 'goosan_bot',
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
-        imagePromptPrefix: '下記の日記から特徴的な場面を遠景の写真にしてください。遠くに小さく茶色の熊を一頭描いてください。',
+        imagePromptPrefix: '下記の日記から特徴的な場面を遠景の写真にしてください。遠くに小さくグリズリーを一頭描いてください。',
     },
 };
 const config = CONFIG[process.env.BEAR_NAME];
