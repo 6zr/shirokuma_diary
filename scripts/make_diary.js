@@ -31,7 +31,7 @@ const CONFIG = {
         bearId: '6',
         bearDirname: 'ochisou_bot',
         diaryPostfix: '\n\n...つまるところ〜ワン',
-        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を幼児が色鉛筆でぐりぐりっと書いたような画風の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
+        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を幼児が色鉛筆でぐりぐりっと書いたような画風の絵にしてください。ただし日記の著者の姿も含め人間と犬は絶対に描かないこと。できるだけ文字も書かないこと。',
     },
 };
 const config = CONFIG[process.env.BEAR_NAME];
