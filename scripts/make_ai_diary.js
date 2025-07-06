@@ -54,15 +54,23 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
             });
     });
 
-    const contents = mastodonResponse.data.map(t => {
-        if (t == null || t.content == null) {
-            return '';
-        }
-        return t.content
-            .replace(/<.+?>/g, '')
-            .replace(/@[a-zA-Z0-9_\-]+? /g, '')
-            .replace(/http.*$/g, '')
-    });
+    const nowDate = new Date();
+    const oneDayAgo = new Date(nowDate.getTime() - (24 * 60 * 60 * 1000)); // 24時間前
+
+    const contents = mastodonResponse.data
+        .filter(status => {
+            const createdAt = new Date(status.created_at);
+            return createdAt >= oneDayAgo;
+        })
+        .map(status => {
+            if (status == null || status.content == null) {
+                return '';
+            }
+            return status.content
+                .replace(/<.+?>/g, '')
+                .replace(/@[a-zA-Z0-9_\-]+? /g, '')
+                .replace(/http.*$/g, '')
+        });
     const contentsText = contents.join('\n');
 
 
