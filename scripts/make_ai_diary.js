@@ -13,6 +13,7 @@ const CONFIG = {
         // bearId: '7',
         bearDirname: 'shirokuma_ai_bot',
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
+        systemPrompt: 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。',
         imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面をサイバーで古めかしいローポリCG風の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
     goosan_bot: {
@@ -20,6 +21,7 @@ const CONFIG = {
         // bearId: '8',
         bearDirname: 'goosan_bot',
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
+        systemPrompt: 'あなたは達観したグリズリーです。一人称は「ワシ」で、老人のような口調で話します。ですます調と「〜じゃ」という語尾を混ぜて使います。',
         imagePromptPrefix: '下記の日記から特徴的な場面を遠景の写真にしてください。遠くに小さくグリズリーを一頭描いてください。',
     },
 };
@@ -102,7 +104,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
         'temperature' : 0.9,
         'messages': [{
             'role': 'developer',
-            'content': 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。', // エンジンから取得したいところ
+            'content': config.systemPrompt, // エンジンから取得したいところ
         }, {
             'role': 'user',
             'content': `下記は今日のあなたのSNS投稿の列挙です。印象深いいくつかの内容を上手くミックスして、口調はそのまま、400文字程度の日記の形にまとめてください。\n"""\n${contentsText}\n"""`,
