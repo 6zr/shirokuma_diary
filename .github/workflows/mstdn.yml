@@ -79,6 +79,9 @@ jobs:
           sudo apt-get install -y pngquant
           find output -name "*.png" -exec pngquant --force --ext .png -- {} \;
 
+      - name: Generate archive pages
+        run: node scripts/generate_archive_pages.js
+
       - name: Generate index page
         run: node scripts/generate_index.js
 

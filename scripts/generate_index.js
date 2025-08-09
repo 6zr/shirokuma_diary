@@ -61,6 +61,7 @@ bots.forEach(bot => {
 
             htmlContent += `
                 </ul>
+                <p><a href="${path.join(bot, 'diary', 'archive.html')}">もっと見る</a></p>
             </div>
             `;
         }
