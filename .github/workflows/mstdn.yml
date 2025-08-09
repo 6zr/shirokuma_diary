@@ -85,12 +85,12 @@ jobs:
       - name: Generate index page
         run: node scripts/generate_index.js
 
-      - name: Commit and push changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/
-          git commit -m "Automated Mastodon timeline download: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
-          git push || echo "Nothing to push"
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }} # mainブランチへのプッシュ時のみデプロイ
+        with:
+          github_token: ${{ secrets.GH_PAGES_TOKEN }}
+          publish_dir: ./output # outputディレクトリの内容をgh-pagesブランチにデプロイ
+          publish_branch: gh-pages # デプロイ先のブランチ名
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
