@@ -201,7 +201,8 @@ class Markov {
         console.log(`Directory created: ${diaryOutputDir}`);
     }
 
-    const diaryFilename = 'index.md';
+    const dateString = `${year}-${month}-${day}`;
+    const diaryFilename = `${dateString}.md`;
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
     const diary = `[${TODAY}]\n\n${markovText}${config.diaryPostfix}`;
@@ -227,9 +228,9 @@ class Markov {
         quality: 'low',
     });
     if (imageCompletion.data != null && imageCompletion.data.length > 0) {
-        const imageFilename = 'image.png';
+        const imageFilename = `${dateString}.png`;
         const imageOutputPath = path.join(diaryOutputDir, imageFilename);
         fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json'], { encoding: "base64" });
-        fs.writeFileSync(diaryOutputPath, `${diary}\n\n<img width="360px" src="image.png">`);
+        fs.writeFileSync(diaryOutputPath, `${diary}\n\n<img width="360px" src="${imageFilename}">`);
     }
 })();

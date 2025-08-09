@@ -93,7 +93,8 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
         console.log(`Directory created: ${diaryOutputDir}`);
     }
 
-    const diaryFilename = 'index.md';
+    const dateString = `${year}-${month}-${day}`;
+    const diaryFilename = `${dateString}.md`;
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
     const client = new OpenAI({ apiKey: openaiApikey });
@@ -127,8 +128,8 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
         fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}`);
         return;
     }
-    const imageFilename = 'image.png';
+    const imageFilename = `${dateString}.png`;
     const imageOutputPath = path.join(diaryOutputDir, imageFilename);
     fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json'], { encoding: "base64" });
-    fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n<img width="360px" src="image.png">`);
+    fs.writeFileSync(diaryOutputPath, `[${TODAY}]\n\n${diaryText}\n\n<img width="360px" src="${imageFilename}">`);
 })();
