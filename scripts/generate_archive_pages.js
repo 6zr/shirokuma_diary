@@ -8,7 +8,7 @@ bots.forEach(bot => {
     const diaryDir = path.join(outputDir, bot, 'diary');
     if (fs.existsSync(diaryDir)) {
         const files = fs.readdirSync(diaryDir)
-            .filter(f => f.endsWith('.html'))
+            .filter(f => f.endsWith('.html') && f !== 'archive.html')
             .sort()
             .reverse(); // 新しい順にソート
 
