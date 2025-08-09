@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const outputDir = './output';
-const bots = fs.readdirSync(outputDir).filter(f => fs.statSync(path.join(outputDir, f)).isDirectory());
+const bots = ['shirokuma_bot', 'shirokumadadbot', 'shirokuma_ai_bot', 'goosan_bot', 'ochisou_bot'];
 
 let htmlContent = `
 <!DOCTYPE html>
@@ -50,7 +50,9 @@ bots.forEach(bot => {
                 <ul>
             `;
 
-            files.forEach(diaryFile => {
+            const latestDiaries = files.slice(0, 5);
+
+            latestDiaries.forEach(diaryFile => {
                 const diaryName = diaryFile.replace('.md', '');
                 const diaryPath = path.join(bot, 'diary', diaryFile);
                 const isLatest = files.indexOf(diaryFile) === 0;
