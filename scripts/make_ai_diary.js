@@ -119,7 +119,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
     const imageCompletion = await client.images.generate({
         'model':'gpt-image-1',
-        'prompt': `${config.imagePromptPrefix}\n"""\n${diaryText}\n""",
+        'prompt': `${config.imagePromptPrefix}\n"""\n${diaryText}\n"""`,
         size: '1024x1024',
         quality: 'low',
     });
