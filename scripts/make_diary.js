@@ -114,7 +114,7 @@ class Markov {
             }
             return status.content
                 .replace(/<.+?>/g, '')
-                .replace(/@[a-zA-Z0-9_\-]+? /g, '')
+                .replace(/@[a-zA-Z0-9_\-]+\s/g, '')
                 .replace(/http.*$/g, '')
         });
     const contentsText = contents.join('\n');
@@ -253,3 +253,27 @@ class Markov {
     <div class="diary-content">
         <div class="diary-date">${TODAY}</div>
         <div class="diary-text">${diary}</div>
+`;
+
+    if (imageCompletion.data != null && imageCompletion.data.length > 0) {
+        const imageFilename = `${dateString}.png`;
+        const imageOutputPath = path.join(diaryOutputDir, imageFilename);
+        fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json'], { encoding: "base64" });
+        htmlOutput += `
+        <div class="diary-image">
+            <img width="360px" src="${imageFilename}">
+        </div>
+`;
+    }
+
+    htmlOutput += `
+    </div>
+    <div class="back-link">
+        <a href="../../index.html">トップページに戻る</a>
+    </div>
+</body>
+</html>
+`;
+
+    fs.writeFileSync(diaryOutputPath, htmlOutput);
+})();
