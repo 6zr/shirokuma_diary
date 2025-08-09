@@ -8,7 +8,7 @@ bots.forEach(bot => {
     const diaryDir = path.join(outputDir, bot, 'diary');
     if (fs.existsSync(diaryDir)) {
         const files = fs.readdirSync(diaryDir)
-            .filter(f => f.endsWith('.md'))
+            .filter(f => f.endsWith('.html'))
             .sort()
             .reverse(); // 新しい順にソート
 
@@ -35,7 +35,7 @@ bots.forEach(bot => {
 `;
 
         files.forEach(diaryFile => {
-            const diaryName = diaryFile.replace('.md', '');
+            const diaryName = diaryFile.replace('.html', '');
             // アーカイブページからの相対パスを考慮
             const diaryPath = diaryFile;
             archiveHtmlContent += `<li><a href="${diaryPath}">${diaryName}</a></li>`;

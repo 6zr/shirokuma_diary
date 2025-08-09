@@ -202,12 +202,11 @@ class Markov {
     }
 
     const dateString = `${year}-${month}-${day}`;
-    const diaryFilename = `${dateString}.md`;
+    const diaryFilename = `${dateString}.html`; // .md から .html に変更
     const diaryOutputPath = path.join(diaryOutputDir, diaryFilename);
 
-    const diary = `[${TODAY}]\n\n${markovText}${config.diaryPostfix}`;
+    const diary = `${markovText}${config.diaryPostfix}`;
     console.log(diary);
-    fs.writeFileSync(diaryOutputPath, diary);
 
     const keywords = (usedKeywords || [])
         .map(x => ({
@@ -223,14 +222,34 @@ class Markov {
     const client = new OpenAI({ apiKey: openaiApikey });
     const imageCompletion = await client.images.generate({
         'model':'gpt-image-1',
-        'prompt': `${config.imagePromptPrefix}\n"""\n${markovText}\n"""`,
+        'prompt': `${config.imagePromptPrefix}\n\"""\n${markovText}\n\"""`,
         size: '1024x1024',
         quality: 'low',
     });
-    if (imageCompletion.data != null && imageCompletion.data.length > 0) {
-        const imageFilename = `${dateString}.png`;
-        const imageOutputPath = path.join(diaryOutputDir, imageFilename);
-        fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json'], { encoding: "base64" });
-        fs.writeFileSync(diaryOutputPath, `${diary}\n\n<img width="360px" src="${imageFilename}">`);
-    }
-})();
+
+    let htmlOutput = `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${TODAY} - ${config.bearDirname}の日記</title>
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; padding: 2em; line-height: 1.6; color: #333; background-color: #fdfdfd; max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; color: #555; margin-bottom: 1em; }
+        .diary-content { background-color: #fff; border-radius: 8px; padding: 2em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .diary-date { text-align: right; color: #777; font-size: 0.9em; margin-bottom: 1em; }
+        .diary-text { white-space: pre-wrap; margin-bottom: 1.5em; }
+        .diary-image { text-align: center; margin-top: 1.5em; }
+        .diary-image img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .back-link { display: block; text-align: center; margin-top: 2em; font-size: 1.1em; }
+        .back-link a { text-decoration: none; color: #007bff; padding: 0.5em 1em; border: 1px solid #007bff; border-radius: 5px; }
+        .back-link a:hover { background-color: #007bff; color: #fff; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>${config.bearDirname}の日記</h1>
+    <div class="diary-content">
+        <div class="diary-date">${TODAY}</div>
+        <div class="diary-text">${diary}</div>
