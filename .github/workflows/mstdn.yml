@@ -65,13 +65,30 @@ jobs:
           BEAR_NAME: 'shirokuma_ai_bot'
         run: node scripts/make_ai_diary.js
 
-      - name: goosan_bot
+      """      - name: goosan_bot
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'goosan_bot'
         run: node scripts/make_ai_diary.js
+
+      - name: Compress images
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pngquant
+          find output -name "image.png" -exec pngquant --force --ext .png -- {} \;
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub Actionsが自動で提供するトークン
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/
+          git commit -m "Automated Mastodon timeline download: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push || echo "Nothing to push"
+""
 
       - name: Commit and push changes
         env:
