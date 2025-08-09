@@ -77,7 +77,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pngquant
-          find output -name "image.png" -exec pngquant --force --ext .png -- {} \;
+          find output -name "*.png" -exec pngquant --force --ext .png -- {} \;
+
+      - name: Generate index page
+        run: node scripts/generate_index.js
 
       - name: Commit and push changes
         env:
