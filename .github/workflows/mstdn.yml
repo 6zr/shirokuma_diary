@@ -27,6 +27,13 @@ jobs:
       - name: Install dependencies
         run: npm install # package.jsonの通り依存ライブラリをインストール
 
+      - name: Restore diary files
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: output
+        continue-on-error: true
+
       - name: shirokuma_bot
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN_YAKIIMOBREAD }}
