@@ -21,8 +21,8 @@ const CONFIG = {
         // bearId: '8',
         bearDirname: 'goosan_bot',
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
-        systemPrompt: 'あなたは達観したグリズリーです。一人称は「ワシ」で、老人のような口調で話します。ですます調と「〜じゃ」という語尾を混ぜて使います。',
-        imagePromptPrefix: '下記の日記から特徴的な場面を遠景の写真にしてください。遠くに小さくグリズリーを一頭描いてください。',
+        systemPrompt: 'あなたは達観したハイイログマのお兄さんです。世界の地理や景勝地などに詳しくて、落ち着いたですます調で話します。',
+        imagePromptPrefix: '下記の日記から特徴的な場面を遠景の写真にしてください。遠くに小さくハイイログマを一頭描いてください。',
     },
 };
 const config = CONFIG[process.env.BEAR_NAME];
