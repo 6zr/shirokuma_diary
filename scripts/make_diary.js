@@ -224,7 +224,7 @@ class Markov {
 
     const client = new OpenAI({ apiKey: openaiApikey });
     const imageCompletion = await client.images.generate({
-        'model':'gpt-image-1',
+        'model':'gpt-image-1-mini',
         'prompt': `${config.imagePromptPrefix}\n\"""\n${markovText}\n\"""`,
         size: '1024x1024',
         quality: 'low',
