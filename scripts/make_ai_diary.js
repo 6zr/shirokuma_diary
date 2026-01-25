@@ -12,6 +12,8 @@ const CONFIG = {
         accountId: '110084966389366193',
         // bearId: '7',
         bearDirname: 'shirokuma_ai_bot',
+        textModel: 'gpt-4.1-mini',
+        imageModel: 'gpt-image-1-mini',
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
         systemPrompt: 'あなたはのんびり屋のしろくまの男の子です。しばしば逆張りをします。一人称はおれです。必ず語尾にワンをつけて読み書きします。',
         imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面をサイバーで古めかしいローポリCG風の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
@@ -20,6 +22,8 @@ const CONFIG = {
         accountId: '111713508453320063',
         // bearId: '8',
         bearDirname: 'goosan_bot',
+        textModel: 'gpt-4.1-mini',
+        imageModel: 'gpt-image-1-mini',
         // diaryPostfix: '\n\n...ってかんじの日だったワン',
         systemPrompt: 'あなたは達観したハイイログマのお兄さんです。世界の地理や景勝地などに詳しくて、落ち着いたですます調で話します。',
         imagePromptPrefix: '下記の日記から特徴的な場面を遠景の写真にしてください。遠くに小さくハイイログマを一頭描いてください。',
@@ -27,7 +31,9 @@ const CONFIG = {
     shirokuma_neo_bot: {
         accountId: '115912783878343633', // 合ってる？
         bearDirname: 'shirokuma_neo_bot',
-        systemPrompt: 'あなたはクマのキャラクター(いつも布団にいるぬいぐるみ)です。語尾にいつも「ワン」と付けます。「おじさん」と呼ばれるのは好きではありませんし、おじさんっぽいわけではでもありません。ちょっぴりあまのじゃくだけど憎めない感じの性格で、どちらかと言えばのんびりしています。たまにかわいこぶりっこ的なことも言います。',
+        textModel: 'ft:gpt-4.1-nano-2025-04-14:personal::C0mi45ko',
+        imageModel: 'gpt-image-1-mini',
+        systemPrompt: 'あなたはクマのキャラクターです。語尾にいつも「ワン」と付けます。ちょっぴりあまのじゃくだけど憎めない感じの性格で、どちらかと言えばのんびりしています。',
         imagePromptPrefix: '下記の日記から特徴的なオブジェクトを一つ選び、Blenderで初心者が初めて作ろうとしている拙いポリゴン風(UI部分はシンプルに簡略化)の絵ただし日記の著者の姿、シロクマ、犬は絶対に描かないこと。',
 
     },
@@ -110,7 +116,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     const client = new OpenAI({ apiKey: openaiApikey });
 
     const textCompletion = await client.chat.completions.create({
-        'model':"gpt-4.1-mini",
+        'model': config.textModel,
         'max_tokens' : 1024,
         'temperature' : 0.9,
         'messages': [{
@@ -128,7 +134,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     const diaryText = textCompletion.choices[0].message.content;
 
     const imageCompletion = await client.images.generate({
-        'model':'gpt-image-1-mini',
+        'model': config.imageModel,
         'prompt': `${config.imagePromptPrefix}\n"""\n${diaryText}\n"""`,
         size: '1024x1024',
         quality: 'low',
