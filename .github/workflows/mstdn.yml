@@ -5,7 +5,12 @@ on:
     # 毎日13時0分(UTC)に実行
     # 日本時間(JST)ではUTC+9なので22時00分
     - cron: '0 13 * * *'
-  workflow_dispatch: # 手動実行も可能にする
+  workflow_dispatch:
+    inputs:
+      bot_name:
+        description: 'Run for a specific bot (e.g., shirokuma_neo_bot). Leave empty to run for all bots.'
+        required: false
+        default: ''
     
 # '898916',しろくま長男,1
 # '899678',しろくまパパ,2
@@ -35,6 +40,7 @@ jobs:
         continue-on-error: true
 
       - name: shirokuma_bot
+        if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'shirokuma_bot'
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_JP_OWNER_ACCESS_TOKEN }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
@@ -45,6 +51,7 @@ jobs:
         run: node scripts/make_diary.js
 
       - name: shirokumadadbot
+        if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'shirokumadadbot'
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_JP_OWNER_ACCESS_TOKEN }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
@@ -55,6 +62,7 @@ jobs:
         run: node scripts/make_diary.js
 
           # - name: ochisou_bot
+          #   if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'ochisou_bot'
           #   env:
           #     MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_JP_OWNER_ACCESS_TOKEN }}
           #     MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
@@ -65,6 +73,7 @@ jobs:
           #   run: node scripts/make_diary.js
 
       - name: shirokuma_ai_bot
+        if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'shirokuma_ai_bot'
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_JP_OWNER_ACCESS_TOKEN }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
@@ -73,6 +82,7 @@ jobs:
         run: node scripts/make_ai_diary.js
 
       - name: goosan_bot
+        if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'goosan_bot'
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_JP_OWNER_ACCESS_TOKEN }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
@@ -81,6 +91,7 @@ jobs:
         run: node scripts/make_ai_diary.js
 
       - name: shirokuma_neo_bot
+        if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'shirokuma_neo_bot'
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_SOCIAL_OWNER_ACCESS_TOKEN }}
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_SOCIAL_URL }}
