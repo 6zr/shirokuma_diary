@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const outputDir = './output';
-const bots = ['shirokuma_bot', 'shirokumadadbot', 'shirokuma_ai_bot', 'goosan_bot', 'ochisou_bot'];
+const bots = ['shirokuma_bot', 'shirokumadadbot', 'shirokuma_ai_bot', 'goosan_bot', 'shirokuma_neo_bot', 'ochisou_bot'];
 
 bots.forEach(bot => {
     const diaryDir = path.join(outputDir, bot, 'diary');
