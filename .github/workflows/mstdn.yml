@@ -24,6 +24,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set JST Date
+        run: echo "DIARY_DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')" >> $GITHUB_ENV
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -48,6 +51,7 @@ jobs:
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokuma_bot'
+          DIARY_DATE: ${{ env.DIARY_DATE }}
         run: node scripts/make_diary.js
 
       - name: shirokumadadbot
@@ -59,18 +63,8 @@ jobs:
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokumadadbot'
+          DIARY_DATE: ${{ env.DIARY_DATE }}
         run: node scripts/make_diary.js
-
-          # - name: ochisou_bot
-          #   if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'ochisou_bot'
-          #   env:
-          #     MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_JP_OWNER_ACCESS_TOKEN }}
-          #     MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
-          #     SHIROKUMA_ENGINE_USER: ${{ secrets.SHIROKUMA_ENGINE_USER }}
-          #     SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
-          #     OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
-          #     BEAR_NAME: 'ochisou_bot'
-          #   run: node scripts/make_diary.js
 
       - name: shirokuma_ai_bot
         if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'shirokuma_ai_bot'
@@ -79,6 +73,7 @@ jobs:
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokuma_ai_bot'
+          DIARY_DATE: ${{ env.DIARY_DATE }}
         run: node scripts/make_ai_diary.js
 
       - name: goosan_bot
@@ -88,6 +83,7 @@ jobs:
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'goosan_bot'
+          DIARY_DATE: ${{ env.DIARY_DATE }}
         run: node scripts/make_ai_diary.js
 
       - name: shirokuma_neo_bot
@@ -97,6 +93,7 @@ jobs:
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_SOCIAL_URL }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokuma_neo_bot'
+          DIARY_DATE: ${{ env.DIARY_DATE }}
         run: node scripts/make_ai_diary.js
 
       - name: abe_kuma_bot
@@ -108,6 +105,7 @@ jobs:
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'abe_kuma_bot'
+          DIARY_DATE: ${{ env.DIARY_DATE }}
         run: node scripts/make_abe_diary.js
 
       - name: Compress images
@@ -129,9 +127,6 @@ jobs:
         with:
           github_token: ${{ secrets.GH_PAGES_TOKEN }}
           publish_dir: ./output # outputディレクトリの内容をgh-pagesブランチにデプロイ
-          publish_branch: gh-pages # デプロイ先のブランチ名
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'ンチにデプロイ
           publish_branch: gh-pages # デプロイ先のブランチ名
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
