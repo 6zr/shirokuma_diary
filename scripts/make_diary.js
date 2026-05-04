@@ -37,9 +37,8 @@ const CONFIG = {
 const config = CONFIG[process.env.BEAR_NAME];
 
 // タイムゾーンをJSTに固定して日付を取得する
-// new Date()が実行環境のタイムゾーンに依存するため、toLocaleStringでJSTの現在時刻文字列を生成し、それを再度Dateオブジェクトに変換する
-// ロケールにen-USを指定しているのは、new Date()が日付文字列を安定して解釈できる形式(MM/DD/YYYY, hh:mm:ss AM/PM)にするため
-const today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+const diaryDateEnv = process.env.DIARY_DATE; // "YYYY-MM-DD"形式を想定
+const today = diaryDateEnv ? new Date(diaryDateEnv + 'T00:00:00+09:00') : new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
 const year = today.getFullYear();
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const day = String(today.getDate()).padStart(2, '0');

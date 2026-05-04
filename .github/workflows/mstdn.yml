@@ -114,9 +114,8 @@ jobs:
         run: |
           # 毎回updateすると遅いため、installのみ試行し、失敗した場合のみupdateする
           sudo apt-get install -y pngquant || (sudo apt-get update && sudo apt-get install -y pngquant)
-          # 全画像を再圧縮すると画像が増えるほど遅くなるため、今日の日付の画像のみを圧縮する
-          TODAY=$(date +'%Y-%m-%d')
-          find output -name "${TODAY}.png" -exec pngquant --force --ext .png -- {} \;
+          # 統一されたDIARY_DATEの画像のみを圧縮する
+          find output -name "${DIARY_DATE}.png" -exec pngquant --force --ext .png -- {} \;
 
       - name: Generate archive pages
         run: node scripts/generate_archive_pages.js
@@ -130,6 +129,9 @@ jobs:
         with:
           github_token: ${{ secrets.GH_PAGES_TOKEN }}
           publish_dir: ./output # outputディレクトリの内容をgh-pagesブランチにデプロイ
+          publish_branch: gh-pages # デプロイ先のブランチ名
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'ンチにデプロイ
           publish_branch: gh-pages # デプロイ先のブランチ名
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'

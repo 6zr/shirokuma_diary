@@ -20,7 +20,8 @@ const CONFIG = {
 };
 const config = CONFIG[process.env.BEAR_NAME] || CONFIG.abe_kuma_bot;
 
-const today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+const diaryDateEnv = process.env.DIARY_DATE; // "YYYY-MM-DD"形式を想定
+const today = diaryDateEnv ? new Date(diaryDateEnv + 'T00:00:00+09:00') : new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
 const year = today.getFullYear();
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const day = String(today.getDate()).padStart(2, '0');
