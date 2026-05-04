@@ -112,9 +112,11 @@ jobs:
 
       - name: Compress images
         run: |
-          sudo apt-get update
-          sudo apt-get install -y pngquant
-          find output -name "*.png" -exec pngquant --force --ext .png -- {} \;
+          # 毎回updateすると遅いため、installのみ試行し、失敗した場合のみupdateする
+          sudo apt-get install -y pngquant || (sudo apt-get update && sudo apt-get install -y pngquant)
+          # 全画像を再圧縮すると画像が増えるほど遅くなるため、今日の日付の画像のみを圧縮する
+          TODAY=$(date +'%Y-%m-%d')
+          find output -name "${TODAY}.png" -exec pngquant --force --ext .png -- {} \;
 
       - name: Generate archive pages
         run: node scripts/generate_archive_pages.js
