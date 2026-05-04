@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const outputDir = './output';
-const bots = ['shirokuma_bot', 'shirokumadadbot', 'shirokuma_ai_bot', 'goosan_bot', 'shirokuma_neo_bot', 'ochisou_bot'];
+const bots = ['shirokuma_bot', 'shirokumadadbot', 'shirokuma_ai_bot', 'goosan_bot', 'shirokuma_neo_bot', 'abe_kuma_bot', 'ochisou_bot'];
 
 let htmlContent = `
 <!DOCTYPE html>
