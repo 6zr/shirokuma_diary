@@ -21,10 +21,16 @@ const CONFIG = {
 const config = CONFIG[process.env.BEAR_NAME] || CONFIG.abe_kuma_bot;
 
 const diaryDateEnv = process.env.DIARY_DATE; // "YYYY-MM-DD"形式を想定
-const today = diaryDateEnv ? new Date(diaryDateEnv + 'T00:00:00+09:00') : new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
-const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const day = String(today.getDate()).padStart(2, '0');
+let year, month, day, today;
+if (diaryDateEnv) {
+    [year, month, day] = diaryDateEnv.split('-');
+    today = new Date(diaryDateEnv + 'T00:00:00+09:00');
+} else {
+    today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+    year = String(today.getFullYear());
+    month = String(today.getMonth() + 1).padStart(2, '0');
+    day = String(today.getDate()).padStart(2, '0');
+}
 const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short' }).format(today);
 const shortDayOfWeek = dayOfWeek.replace('曜日', '');
 const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
