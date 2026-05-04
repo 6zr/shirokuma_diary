@@ -112,8 +112,22 @@ jobs:
         run: |
           # 毎回updateすると遅いため、installのみ試行し、失敗した場合のみupdateする
           sudo apt-get install -y pngquant || (sudo apt-get update && sudo apt-get install -y pngquant)
-          # 統一されたDIARY_DATEの画像のみを圧縮する
-          find output -name "${DIARY_DATE}.png" -exec pngquant --force --ext .png -- {} \;
+          
+          echo "Target Date: ${DIARY_DATE}"
+          echo "Searching for images to compress..."
+          
+          # 圧縮対象のファイルをリストアップして表示
+          TARGET_FILES=$(find output -name "${DIARY_DATE}.png")
+          
+          if [ -z "$TARGET_FILES" ]; then
+            echo "No images found for date ${DIARY_DATE}."
+          else
+            for file in $TARGET_FILES; do
+              echo "Compressing $file ..."
+              pngquant --force --ext .png --speed 1 --strip "$file"
+            done
+            echo "Compression completed."
+          fi
 
       - name: Generate archive pages
         run: node scripts/generate_archive_pages.js
