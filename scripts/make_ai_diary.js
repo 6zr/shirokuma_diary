@@ -123,7 +123,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
     const textCompletion = await client.chat.completions.create({
         'model': config.textModel,
-        'max_tokens' : 1024,
+        'max_completion_token' : 1024,
         'temperature' : 0.9,
         'messages': [{
             'role': 'developer',
