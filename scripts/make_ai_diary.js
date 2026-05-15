@@ -49,6 +49,10 @@ if (diaryDateEnv) {
     today = new Date(diaryDateEnv + 'T00:00:00+09:00');
 } else {
     today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+    // 8時前なら前日の日記とする
+    if (today.getHours() < 8) {
+        today.setDate(today.getDate() - 1);
+    }
     year = String(today.getFullYear());
     month = String(today.getMonth() + 1).padStart(2, '0');
     day = String(today.getDate()).padStart(2, '0');
@@ -174,7 +178,7 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
         <div class="diary-text">${diaryText}</div>
 `;
 
-    if (imageCompletion.data != null && imageCompletion.data.length > 0) {
+    if (imageCompletion && imageCompletion.data != null && imageCompletion.data.length > 0) {
         const imageFilename = `${dateString}.png`;
         const imageOutputPath = path.join(diaryOutputDir, imageFilename);
         fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json'], { encoding: "base64" });
@@ -182,6 +186,26 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
         <div class="diary-image">
             <img width="360px" src="${imageFilename}">
         </div>
+`;
+    } else {
+        htmlOutput += `
+        <div class="diary-image" style="color: #999; font-size: 0.8em; margin-top: 2em;">
+            （今日の画像はありませんでした）
+        </div>
+`;
+    }
+
+    htmlOutput += `
+    </div>
+    <div class="back-link">
+        <a href="../../index.html">トップページに戻る</a>
+    </div>
+</body>
+</html>
+`;
+
+    fs.writeFileSync(diaryOutputPath, htmlOutput);
+})();</div>
 `;
     }
 

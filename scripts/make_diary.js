@@ -44,6 +44,10 @@ if (diaryDateEnv) {
     today = new Date(diaryDateEnv + 'T00:00:00+09:00');
 } else {
     today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+    // 8時前なら前日の日記とする
+    if (today.getHours() < 8) {
+        today.setDate(today.getDate() - 1);
+    }
     year = String(today.getFullYear());
     month = String(today.getMonth() + 1).padStart(2, '0');
     day = String(today.getDate()).padStart(2, '0');
@@ -228,12 +232,17 @@ class Markov {
     console.log(keywords);
 
     const client = new OpenAI({ apiKey: openaiApikey });
-    const imageCompletion = await client.images.generate({
-        'model':'gpt-image-1',
-        'prompt': `${config.imagePromptPrefix}\n\"""\n${markovText}\n\"""`,
-        size: '1024x1024',
-        quality: 'low',
-    });
+    let imageCompletion = null;
+    try {
+        imageCompletion = await client.images.generate({
+            'model':'gpt-image-1',
+            'prompt': `${config.imagePromptPrefix}\n\"""\n${markovText}\n\"""`,
+            size: '1024x1024',
+            quality: 'low',
+        });
+    } catch (error) {
+        console.error(`Image generation failed for ${config.bearDirname}:`, error.message);
+    }
 
     let htmlOutput = `
 <!DOCTYPE html>
@@ -263,7 +272,7 @@ class Markov {
         <div class="diary-text">${diary}</div>
 `;
 
-    if (imageCompletion.data != null && imageCompletion.data.length > 0) {
+    if (imageCompletion && imageCompletion.data != null && imageCompletion.data.length > 0) {
         const imageFilename = `${dateString}.png`;
         const imageOutputPath = path.join(diaryOutputDir, imageFilename);
         fs.writeFileSync(imageOutputPath, imageCompletion.data[0]['b64_json'], { encoding: "base64" });
@@ -271,7 +280,13 @@ class Markov {
         <div class="diary-image">
             <img width="360px" src="${imageFilename}">
         </div>
-`;
+    `;
+    } else {
+        htmlOutput += `
+        <div class="diary-image" style="color: #999; font-size: 0.8em; margin-top: 2em;">
+            （今日の画像はありませんでした）
+        </div>
+    `;
     }
 
     htmlOutput += `

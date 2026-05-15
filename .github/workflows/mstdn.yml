@@ -2,9 +2,10 @@ name: Generate Shirokuma Diary
 
 on:
   schedule:
-    # 毎日13時0分(UTC)に実行
-    # 日本時間(JST)ではUTC+9なので22時00分
-    - cron: '0 13 * * *'
+    # 毎日13時7分(UTC)に実行
+    # 日本時間(JST)ではUTC+9なので22時07分
+    # 0分ちょうどは混み合うため少しずらしています
+    - cron: '7 13 * * *'
   workflow_dispatch:
     inputs:
       bot_name:
