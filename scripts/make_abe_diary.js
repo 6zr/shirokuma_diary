@@ -143,12 +143,17 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     const diary = `${config.diaryPrefix || ''}${diaryText}${config.diaryPostfix}`;
     console.log(diary);
 
-    const imageCompletion = await client.images.generate({
-        'model':'gpt-image-2',
-        'prompt': `${config.imagePromptPrefix}\n\"""\n${bestMatchText || diaryText}\n\"""`,
-        size: '1024x1024',
-        quality: 'low',
-    });
+    let imageCompletion = null;
+    try {
+        imageCompletion = await client.images.generate({
+            'model':'gpt-image-2',
+            'prompt': `${config.imagePromptPrefix}\n\"""\n${bestMatchText || diaryText}\n\"""`,
+            size: '1024x1024',
+            quality: 'low',
+        });
+    } catch (error) {
+        console.error(`Image generation failed for ${config.bearDirname}:`, error.message);
+    }
 
     let htmlOutput = `
 <!DOCTYPE html>

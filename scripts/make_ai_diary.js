@@ -143,12 +143,18 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     }
     const diaryText = textCompletion.choices[0].message.content;
 
-    const imageCompletion = await client.images.generate({
-        'model': config.imageModel,
-        'prompt': `${config.imagePromptPrefix}\n"""\n${diaryText}\n"""`,
-        size: '1024x1024',
-        quality: 'low',
-    });
+    let imageCompletion = null;
+    try {
+        imageCompletion = await client.images.generate({
+            'model': config.imageModel,
+            'prompt': `${config.imagePromptPrefix}\n"""\n${diaryText}\n"""`,
+            size: '1024x1024',
+            quality: 'low',
+        });
+    } catch (error) {
+        console.error(`Image generation failed for ${config.bearDirname}:`, error.message);
+        // 画像生成に失敗しても日記の生成は続ける
+    }
 
     let htmlOutput = `
 <!DOCTYPE html>
@@ -192,20 +198,6 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
         <div class="diary-image" style="color: #999; font-size: 0.8em; margin-top: 2em;">
             （今日の画像はありませんでした）
         </div>
-`;
-    }
-
-    htmlOutput += `
-    </div>
-    <div class="back-link">
-        <a href="../../index.html">トップページに戻る</a>
-    </div>
-</body>
-</html>
-`;
-
-    fs.writeFileSync(diaryOutputPath, htmlOutput);
-})();</div>
 `;
     }
 
