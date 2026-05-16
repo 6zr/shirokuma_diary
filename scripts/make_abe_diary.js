@@ -213,12 +213,3 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
     fs.writeFileSync(diaryOutputPath, htmlOutput);
 })();
-ink">
-        <a href="../../index.html">トップページに戻る</a>
-    </div>
-</body>
-</html>
-`;
-
-    fs.writeFileSync(diaryOutputPath, htmlOutput);
-})();
