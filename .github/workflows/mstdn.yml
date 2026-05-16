@@ -21,6 +21,8 @@ on:
 jobs:
   make_diary:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,7 +33,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # 使用するNode.jsのバージョンを指定
+          node-version: '24' # Node.js 24にアップデート
 
       - name: Install dependencies
         run: npm install # package.jsonの通り依存ライブラリをインストール
