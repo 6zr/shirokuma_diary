@@ -2,14 +2,18 @@ name: Generate Shirokuma Diary
 
 on:
   schedule:
-    # 毎日13時7分(UTC)に実行
-    # 日本時間(JST)ではUTC+9なので22時07分
-    # 0分ちょうどは混み合うため少しずらしています
-    - cron: '7 13 * * *'
+    # 毎日11時7分(UTC)に実行
+    # 日本時間(JST)ではUTC+9なので20時07分
+    # 遅延対策のため少し早めの時間に設定
+    - cron: '7 11 * * *'
   workflow_dispatch:
     inputs:
       bot_name:
         description: 'Run for a specific bot (e.g., shirokuma_neo_bot). Leave empty to run for all bots.'
+        required: false
+        default: ''
+      diary_date:
+        description: 'Target date (YYYY-MM-DD). Leave empty to automatically determine date.'
         required: false
         default: ''
     
@@ -26,9 +30,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set JST Date
-        run: echo "DIARY_DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')" >> $GITHUB_ENV
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -54,7 +55,8 @@ jobs:
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokuma_bot'
-          DIARY_DATE: ${{ env.DIARY_DATE }}
+          # 自動実行(schedule)時は空文字""となりスクリプト側の自動判定(8時前なら前日)が動きます。手動指定時のみその日付が入ります。
+          DIARY_DATE: ${{ github.event.inputs.diary_date }}
         run: node scripts/make_diary.js
 
       - name: shirokumadadbot
@@ -66,7 +68,8 @@ jobs:
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokumadadbot'
-          DIARY_DATE: ${{ env.DIARY_DATE }}
+          # 自動実行(schedule)時は空文字""となりスクリプト側の自動判定(8時前なら前日)が動きます。手動指定時のみその日付が入ります。
+          DIARY_DATE: ${{ github.event.inputs.diary_date }}
         run: node scripts/make_diary.js
 
       - name: shirokuma_ai_bot
@@ -76,7 +79,8 @@ jobs:
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokuma_ai_bot'
-          DIARY_DATE: ${{ env.DIARY_DATE }}
+          # 自動実行(schedule)時は空文字""となりスクリプト側の自動判定(8時前なら前日)が動きます。手動指定時のみその日付が入ります。
+          DIARY_DATE: ${{ github.event.inputs.diary_date }}
         run: node scripts/make_ai_diary.js
 
       - name: goosan_bot
@@ -86,7 +90,8 @@ jobs:
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_JP_URL }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'goosan_bot'
-          DIARY_DATE: ${{ env.DIARY_DATE }}
+          # 自動実行(schedule)時は空文字""となりスクリプト側の自動判定(8時前なら前日)が動きます。手動指定時のみその日付が入ります。
+          DIARY_DATE: ${{ github.event.inputs.diary_date }}
         run: node scripts/make_ai_diary.js
 
       - name: shirokuma_neo_bot
@@ -96,7 +101,8 @@ jobs:
           MASTODON_INSTANCE_URL: ${{ vars.MASTODON_SOCIAL_URL }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'shirokuma_neo_bot'
-          DIARY_DATE: ${{ env.DIARY_DATE }}
+          # 自動実行(schedule)時は空文字""となりスクリプト側の自動判定(8時前なら前日)が動きます。手動指定時のみその日付が入ります。
+          DIARY_DATE: ${{ github.event.inputs.diary_date }}
         run: node scripts/make_ai_diary.js
 
       - name: abe_kuma_bot
@@ -108,7 +114,8 @@ jobs:
           SHIROKUMA_ENGINE_PASSWORD: ${{ secrets.SHIROKUMA_ENGINE_PASSWORD }}
           OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
           BEAR_NAME: 'abe_kuma_bot'
-          DIARY_DATE: ${{ env.DIARY_DATE }}
+          # 自動実行(schedule)時は空文字""となりスクリプト側の自動判定(8時前なら前日)が動きます。手動指定時のみその日付が入ります。
+          DIARY_DATE: ${{ github.event.inputs.diary_date }}
         run: node scripts/make_abe_diary.js
 
       - name: Compress images
@@ -116,18 +123,17 @@ jobs:
           # 毎回updateすると遅いため、installのみ試行し、失敗した場合のみupdateする
           sudo apt-get install -y pngquant || (sudo apt-get update && sudo apt-get install -y pngquant)
           
-          echo "Target Date: ${DIARY_DATE}"
-          echo "Searching for images to compress..."
-          
-          # 圧縮対象のファイルをリストアップして表示
-          TARGET_FILES=$(find output -name "${DIARY_DATE}.png")
+          # 本来は「今回生成されたファイルだけ」を圧縮したいが、ワークフロー側での日付変数管理を避けてスクリプト側に日付決定を集約しているため、
+          # 代替策として「直近24時間以内に作成・更新された画像 (-mtime -1)」のみを検索して過去の大量の画像を再走査せず効率的に圧縮します。
+          echo "Searching for recently updated images (-mtime -1) to compress..."
+          TARGET_FILES=$(find output -name "*.png" -mtime -1)
           
           if [ -z "$TARGET_FILES" ]; then
-            echo "No images found for date ${DIARY_DATE}."
+            echo "No recent images found."
           else
             for file in $TARGET_FILES; do
               echo "Compressing $file ..."
-              pngquant --force --ext .png --speed 1 --strip "$file"
+              pngquant --force --ext .png --speed 1 --strip "$file" || true
             done
             echo "Compression completed."
           fi

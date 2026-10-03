@@ -41,7 +41,7 @@ const diaryDateEnv = process.env.DIARY_DATE; // "YYYY-MM-DD"形式を想定
 let year, month, day, today;
 if (diaryDateEnv) {
     [year, month, day] = diaryDateEnv.split('-');
-    today = new Date(diaryDateEnv + 'T00:00:00+09:00');
+    today = new Date(`${year}-${month}-${day}T00:00:00+09:00`);
 } else {
     today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
     // 8時前なら前日の日記とする
@@ -52,7 +52,7 @@ if (diaryDateEnv) {
     month = String(today.getMonth() + 1).padStart(2, '0');
     day = String(today.getDate()).padStart(2, '0');
 }
-const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short' }).format(today);
+const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short', timeZone: 'Asia/Tokyo' }).format(today);
 const shortDayOfWeek = dayOfWeek.replace('曜日', ''); // '月曜日' -> '月'
 const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
