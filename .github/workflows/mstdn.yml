@@ -46,6 +46,9 @@ jobs:
           path: output
         continue-on-error: true
 
+      - name: Create timestamp marker
+        run: touch /tmp/start_marker
+
       - name: shirokuma_bot
         if: github.event.inputs.bot_name == '' || github.event.inputs.bot_name == 'shirokuma_bot'
         env:
@@ -123,13 +126,12 @@ jobs:
           # 毎回updateすると遅いため、installのみ試行し、失敗した場合のみupdateする
           sudo apt-get install -y pngquant || (sudo apt-get update && sudo apt-get install -y pngquant)
           
-          # 本来は「今回生成されたファイルだけ」を圧縮したいが、ワークフロー側での日付変数管理を避けてスクリプト側に日付決定を集約しているため、
-          # 代替策として「直近24時間以内に作成・更新された画像 (-mtime -1)」のみを検索して過去の大量の画像を再走査せず効率的に圧縮します。
-          echo "Searching for recently updated images (-mtime -1) to compress..."
-          TARGET_FILES=$(find output -name "*.png" -mtime -1)
+          # Restoreステップで復元された過去の画像を除外し、今回のワークフロー実行中に新規生成・更新された画像 (-newer /tmp/start_marker) だけをピンポイントで圧縮します。
+          echo "Searching for newly generated images during this run..."
+          TARGET_FILES=$(find output -name "*.png" -newer /tmp/start_marker)
           
           if [ -z "$TARGET_FILES" ]; then
-            echo "No recent images found."
+            echo "No newly generated images found."
           else
             for file in $TARGET_FILES; do
               echo "Compressing $file ..."
