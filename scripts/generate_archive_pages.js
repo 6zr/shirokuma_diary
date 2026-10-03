@@ -6,14 +6,51 @@ const bots = ['shirokuma_bot', 'shirokumadadbot', 'shirokuma_ai_bot', 'goosan_bo
 
 bots.forEach(bot => {
     const diaryDir = path.join(outputDir, bot, 'diary');
-    if (fs.existsSync(diaryDir)) {
-        const files = fs.readdirSync(diaryDir)
-            .filter(f => f.endsWith('.html') && f !== 'archive.html')
-            .sort()
-            .reverse(); // 新しい順にソート
+    if (!fs.existsSync(diaryDir)) return;
 
-        let archiveHtmlContent = `
-<!DOCTYPE html>
+    // 1. 各日記HTMLファイルへの「前日」「翌日」ナビゲーションリンクの一括更新・付与
+    // 日付順（古い順）にソート
+    const chronologicalFiles = fs.readdirSync(diaryDir)
+        .filter(f => f.endsWith('.html') && f !== 'archive.html' && f !== 'index.html')
+        .sort();
+
+    chronologicalFiles.forEach((file, index) => {
+        const filePath = path.join(diaryDir, file);
+        let htmlContent = fs.readFileSync(filePath, 'utf8');
+
+        const prevFile = chronologicalFiles[index - 1];
+        const nextFile = chronologicalFiles[index + 1];
+
+        const prevDate = prevFile ? prevFile.replace('.html', '') : null;
+        const nextDate = nextFile ? nextFile.replace('.html', '') : null;
+
+        const prevLinkHtml = prevDate ? `<a href="${prevFile}">← ${prevDate}</a>` : `<span style="visibility: hidden;">← 前日</span>`;
+        const nextLinkHtml = nextDate ? `<a href="${nextFile}">${nextDate} →</a>` : `<span style="visibility: hidden;">翌日 →</span>`;
+
+        const navHtml = `<div class="back-link" style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 2em auto 0; gap: 10px; flex-wrap: wrap;">
+        ${prevLinkHtml}
+        <a href="../../index.html">トップページに戻る</a>
+        ${nextLinkHtml}
+    </div>`;
+
+        let updatedHtml = htmlContent;
+        if (updatedHtml.includes('<div class="back-link">')) {
+            updatedHtml = updatedHtml.replace(/<div class="back-link">[\s\S]*?<\/div>/, navHtml);
+        } else {
+            updatedHtml = updatedHtml.replace('</body>', `${navHtml}\n</body>`);
+        }
+
+        // 内容が変更された場合のみディスクに書き込み保存（パフォーマンス最適化）
+        if (updatedHtml !== htmlContent) {
+            fs.writeFileSync(filePath, updatedHtml);
+            console.log(`Updated navigation links in ${filePath}`);
+        }
+    });
+
+    // 2. アーカイブ一覧ページ (archive.html) の生成
+    const files = [...chronologicalFiles].reverse(); // 新しい順にソート
+
+    let archiveHtmlContent = `<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -34,22 +71,18 @@ bots.forEach(bot => {
     <ul>
 `;
 
-        files.forEach(diaryFile => {
-            const diaryName = diaryFile.replace('.html', '');
-            // アーカイブページからの相対パスを考慮
-            const diaryPath = diaryFile;
-            archiveHtmlContent += `<li><a href="${diaryPath}">${diaryName}</a></li>`;
-        });
+    files.forEach(diaryFile => {
+        const diaryName = diaryFile.replace('.html', '');
+        archiveHtmlContent += `<li><a href="${diaryFile}">${diaryName}</a></li>\n`;
+    });
 
-        archiveHtmlContent += `
-    </ul>
+    archiveHtmlContent += `    </ul>
 </body>
 </html>
 `;
 
-        fs.writeFileSync(path.join(diaryDir, 'archive.html'), archiveHtmlContent);
-        console.log(`Generated archive.html for ${bot}`);
-    }
+    fs.writeFileSync(path.join(diaryDir, 'archive.html'), archiveHtmlContent);
+    console.log(`Generated archive.html for ${bot}`);
 });
 
-console.log('All archive pages generated successfully.');
+console.log('All archive pages and diary navigation links updated successfully.');
