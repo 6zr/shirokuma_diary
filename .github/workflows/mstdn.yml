@@ -153,5 +153,6 @@ jobs:
           github_token: ${{ secrets.GH_PAGES_TOKEN }}
           publish_dir: ./output # outputディレクトリの内容をgh-pagesブランチにデプロイ
           publish_branch: gh-pages # デプロイ先のブランチ名
+          keep_files: true # 大量のrmログの抑止と高速化のため差分更新を行う
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
