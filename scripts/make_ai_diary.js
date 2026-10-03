@@ -43,21 +43,32 @@ const config = CONFIG[process.env.BEAR_NAME];
 
 // タイムゾーンをJSTに固定して日付を取得する
 const diaryDateEnv = process.env.DIARY_DATE; // "YYYY-MM-DD"形式を想定
-let year, month, day, today;
+let year, month, day;
+
 if (diaryDateEnv) {
     [year, month, day] = diaryDateEnv.split('-');
-    today = new Date(`${year}-${month}-${day}T00:00:00+09:00`);
 } else {
-    today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
-    // 8時前なら前日の日記とする
-    if (today.getHours() < 8) {
-        today.setDate(today.getDate() - 1);
+    // 'sv-SE' (スウェーデン) ロケールを指定すると "YYYY-MM-DD HH:mm:ss" 形式でJST現在日時が取得できます
+    const jstStr = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
+    const [datePart, timePart] = jstStr.split(' ');
+    [year, month, day] = datePart.split('-');
+    const hour = parseInt(timePart.split(':')[0], 10);
+
+    // 朝8時前なら前日の日記とする
+    if (hour < 8) {
+        // Date.UTCを使ってサーバーのタイムゾーンに影響されずに安全に1日戻す
+        const d = new Date(Date.UTC(year, month - 1, day));
+        d.setUTCDate(d.getUTCDate() - 1);
+        year = String(d.getUTCFullYear());
+        month = String(d.getUTCMonth() + 1).padStart(2, '0');
+        day = String(d.getUTCDate()).padStart(2, '0');
     }
-    year = String(today.getFullYear());
-    month = String(today.getMonth() + 1).padStart(2, '0');
-    day = String(today.getDate()).padStart(2, '0');
 }
-const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short', timeZone: 'Asia/Tokyo' }).format(today);
+
+// 確定した (year, month, day) から環境非依存の UTC Date を作成して曜日を取得
+// （Date.UTC と timeZone: 'UTC' を組合わせることで、GitHub Actions等のUTCサーバー環境での曜日のズレを防ぎます）
+const dateObj = new Date(Date.UTC(year, month - 1, day));
+const dayOfWeek = new Intl.DateTimeFormat('ja-JP', { weekday: 'short', timeZone: 'UTC' }).format(dateObj);
 const shortDayOfWeek = dayOfWeek.replace('曜日', ''); // '月曜日' -> '月'
 const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
 
