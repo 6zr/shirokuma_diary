@@ -34,11 +34,12 @@ bots.forEach(bot => {
     </div>`;
 
         let updatedHtml = htmlContent;
-        if (updatedHtml.includes('<div class="back-link">')) {
-            updatedHtml = updatedHtml.replace(/<div class="back-link">[\s\S]*?<\/div>/, navHtml);
-        } else {
-            updatedHtml = updatedHtml.replace('</body>', `${navHtml}\n</body>`);
-        }
+
+        // 【重複防止】既存のすべての <div class="back-link"...>...</div> を一括削除
+        updatedHtml = updatedHtml.replace(/<div[^>]*class=["']back-link["'][^>]*>[\s\S]*?<\/div>/gi, '');
+
+        // </body> の直前に、最新のナビゲーションリンクを常に1セットだけきれいに挿入
+        updatedHtml = updatedHtml.replace('</body>', `${navHtml}\n</body>`);
 
         // 内容が変更された場合のみディスクに書き込み保存（パフォーマンス最適化）
         if (updatedHtml !== htmlContent) {
