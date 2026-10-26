@@ -16,6 +16,7 @@ const CONFIG = {
         accountId: '898916',
         bearId: '1',
         bearDirname: 'shirokuma_bot',
+        imageModel: 'gpt-image-2',
         diaryPostfix: '\n\n...ってかんじの日だったワン',
         imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を子供がクレヨンで描いたような絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
@@ -23,6 +24,7 @@ const CONFIG = {
         accountId: '899678',
         bearId: '2',
         bearDirname: 'shirokumadadbot',
+        imageModel: 'gpt-image-2',
         diaryPostfix: '\n\n...ってかんじの日でしたなワン',
         imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を"素人の趣味の油絵"といった雰囲気の絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
     },
@@ -30,6 +32,7 @@ const CONFIG = {
         accountId: '109289980042219018',
         bearId: '6',
         bearDirname: 'ochisou_bot',
+        imageModel: 'gpt-image-2',
         diaryPostfix: '\n\n...つまるところ〜ワン',
         imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を幼児が色鉛筆でぐりぐりっと書いたような画風の絵にしてください。ただし日記の著者の姿も含め人間と犬は絶対に描かないこと。できるだけ文字も書かないこと。',
     },
@@ -246,7 +249,7 @@ class Markov {
     let imageCompletion = null;
     try {
         imageCompletion = await client.images.generate({
-            'model':'gpt-image-1',
+            'model': config.imageModel || 'gpt-image-2',
             'prompt': `${config.imagePromptPrefix}\n\"""\n${markovText}\n\"""`,
             size: '1024x1024',
             quality: 'low',
