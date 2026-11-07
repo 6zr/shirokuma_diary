@@ -1,0 +1,32 @@
+name: Test Image Models Comparison
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run image comparison test
+        env:
+          OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
+        run: node scripts/test_compare.js
+
+      - name: Upload generated test images
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-comparison-images
+          path: test_outputs/
+          retention-days: 7
