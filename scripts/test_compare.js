@@ -13,20 +13,23 @@ const client = new OpenAI({ apiKey });
 // shirokuma_bot の典型的な日記テキスト
 const diaryText = `今日はおやつにゴマ団子を食べたワン。やっぱりエビフライには醤油だねワン。おぼろげながら浮かんできたんです81という数字がワン。クリームシチューもおすすめワン。...ってかんじの日だったワン`;
 
-// Pattern 4: モチーフ複数並べる + 文字/リアル質感禁止
-const prompt4 = `絵日記用に、下記の日記に出てくる食べ物や出来事をいくつか、4〜5歳の子供が画用紙いっぱいにクレヨンで描いたような絵にしてください。
-- 日記の著者の姿、犬、そして【文字やセリフ（日本語・英語・数字問わず）は絶対に描かないこと】。
-- 遠近感や立体感、リアルな陰影はつけず、ふにゃふにゃした素朴な線とクレヨンのベタ塗りで、平面的に描くこと。
-- プロのような凝ったイラスト、美しいグラデーション、小洒落たPOP風の仕上げは禁止です。
+// Pattern 6: 身体的制約とデッサン崩壊を強調した日本語プロンプト
+const prompt6 = `3歳の幼児がクレヨンを握りこぶしで持って、画用紙に力任せに殴り書きしたような、非常に不器用で拙い落書き（crude toddler crayon scribbles）。
+- 日記に出てくる食べ物や出来事を描こうとしていますが、形がうまく捉えられず丸や線がガタガタに歪んで崩れています。
+- クレヨンの色は輪郭からはみ出しまくっており、塗り残しの隙間だらけです。
+- 文字、セリフ、犬、人物の姿は一切描かないこと。
+- プロのようなまとまり、綺麗なデッサン、整った構図は厳禁。とにかく下手で稚拙な子供のなぐり描きにしてください。
 """
 ${diaryText}
 """`;
 
-// Pattern 5: 絵日記の場面（食卓や情景）+ 子供のクレヨンタッチ
-const prompt5 = `下記の日記の情景を、子供がクレヨンでお絵かき帳に描いたような素朴な絵日記のイラストにしてください。
-- 日記に登場する食べ物や出来事をいくつか散りばめて描いてください。
-- 文字、文字風の記号、セリフ、犬、日記の著者の姿は一切描かないこと。
-- 子供らしい歪んだ太い輪郭線と粗いクレヨンの塗りつぶしで、平面的に描くこと。リアルな立体感や緻密な描き込みは禁止。
+// Pattern 7: 英語の拙さキーワード（crude toddler scribbles, naive art）を軸にしたプロンプト
+const prompt7 = `A crude, clumsy crayon scribbling by a 3-year-old toddler on rough white paper.
+The child tried to draw the foods and motifs from the following diary, but the shapes are highly distorted, lopsided, naive, and barely recognizable.
+- Thick, trembling, unsteady crayon lines. Colors scribbled violently outside the lines with messy white gaps.
+- Absolutely NO text, letters, Japanese characters, or words.
+- NO dogs, NO human characters.
+- Must look like authentic, completely unskilled, primitive toddler scribbles. Strictly forbid polished children's book illustrations or neat outlines.
 """
 ${diaryText}
 """`;
@@ -59,16 +62,16 @@ async function generate(filename, model, prompt) {
 }
 
 async function main() {
-    console.log('--- Starting Image Comparison Test (Pattern 4 & 5) ---');
+    console.log('--- Starting Image Comparison Test (Pattern 6 & 7) ---');
     console.log('Diary Text:\n', diaryText);
 
-    // 4. 新プロンプト改善案A（モチーフ複数・文字禁止） + gpt-image-2
-    console.log('\n[Pattern 4] Multiple motifs + gpt-image-2');
-    await generate('pattern4_motifs_gpt-image-2', 'gpt-image-2', prompt4);
+    // 6. 拙さ特化（日本語プロンプト） + gpt-image-2
+    console.log('\n[Pattern 6] Clumsy toddler Japanese + gpt-image-2');
+    await generate('pattern6_clumsy_ja_gpt-image-2', 'gpt-image-2', prompt6);
 
-    // 5. 新プロンプト改善案B（お絵かき帳情景風） + gpt-image-2
-    console.log('\n[Pattern 5] Scene sketchbook + gpt-image-2');
-    await generate('pattern5_scene_gpt-image-2', 'gpt-image-2', prompt5);
+    // 7. 拙さ特化（英語プロンプト） + gpt-image-2
+    console.log('\n[Pattern 7] Clumsy toddler English + gpt-image-2');
+    await generate('pattern7_clumsy_en_gpt-image-2', 'gpt-image-2', prompt7);
 
     console.log('\n--- Test Completed! ---');
 }
