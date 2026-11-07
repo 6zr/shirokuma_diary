@@ -13,16 +13,20 @@ const client = new OpenAI({ apiKey });
 // shirokuma_bot の典型的な日記テキスト
 const diaryText = `今日はおやつにゴマ団子を食べたワン。やっぱりエビフライには醤油だねワン。おぼろげながら浮かんできたんです81という数字がワン。クリームシチューもおすすめワン。...ってかんじの日だったワン`;
 
-// 従来プロンプト
-const legacyPromptPrefix = '絵日記用に、下記の日記から特徴的な場面を子供がクレヨンで描いたような絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。';
-const legacyPrompt = `${legacyPromptPrefix}\n"""\n${diaryText}\n"""`;
+// Pattern 4: モチーフ複数並べる + 文字/リアル質感禁止
+const prompt4 = `絵日記用に、下記の日記に出てくる食べ物や出来事をいくつか、4〜5歳の子供が画用紙いっぱいにクレヨンで描いたような絵にしてください。
+- 日記の著者の姿、犬、そして【文字やセリフ（日本語・英語・数字問わず）は絶対に描かないこと】。
+- 遠近感や立体感、リアルな陰影はつけず、ふにゃふにゃした素朴な線とクレヨンのベタ塗りで、平面的に描くこと。
+- プロのような凝ったイラスト、美しいグラデーション、小洒落たPOP風の仕上げは禁止です。
+"""
+${diaryText}
+"""`;
 
-// 改善プロンプト（gpt-image-2向け）
-const newPrompt = `絵日記用に、下記の日記から【最も印象的なモチーフを1つだけ】選んで、4〜5歳の幼稚園児がクレヨンで画用紙に殴り書きしたような、非常にシンプルで拙い絵にしてください。
-- 背景は何も描かず、白い余白のままにしてください。
-- 遠近感や立体感、陰影は一切つけず、ふにゃふにゃした太い線とはみ出したベタ塗りで描くこと。
-- プロのイラストや絵本のような細かい描き込み・リアルな質感は禁止です。
-- 日記の著者の姿と犬は絶対に描かないこと。
+// Pattern 5: 絵日記の場面（食卓や情景）+ 子供のクレヨンタッチ
+const prompt5 = `下記の日記の情景を、子供がクレヨンでお絵かき帳に描いたような素朴な絵日記のイラストにしてください。
+- 日記に登場する食べ物や出来事をいくつか散りばめて描いてください。
+- 文字、文字風の記号、セリフ、犬、日記の著者の姿は一切描かないこと。
+- 子供らしい歪んだ太い輪郭線と粗いクレヨンの塗りつぶしで、平面的に描くこと。リアルな立体感や緻密な描き込みは禁止。
 """
 ${diaryText}
 """`;
@@ -55,24 +59,16 @@ async function generate(filename, model, prompt) {
 }
 
 async function main() {
-    console.log('--- Starting Image Comparison Test ---');
+    console.log('--- Starting Image Comparison Test (Pattern 4 & 5) ---');
     console.log('Diary Text:\n', diaryText);
 
-    // 1. 従来プロンプト + gpt-image-1 (または 1-mini)
-    console.log('\n[Pattern 1] Legacy Prompt + gpt-image-1');
-    const p1Success = await generate('pattern1_legacy_gpt-image-1', 'gpt-image-1', legacyPrompt);
-    if (!p1Success) {
-        console.log('gpt-image-1 failed. Falling back to gpt-image-1-mini for Pattern 1...');
-        await generate('pattern1_legacy_gpt-image-1-mini', 'gpt-image-1-mini', legacyPrompt);
-    }
+    // 4. 新プロンプト改善案A（モチーフ複数・文字禁止） + gpt-image-2
+    console.log('\n[Pattern 4] Multiple motifs + gpt-image-2');
+    await generate('pattern4_motifs_gpt-image-2', 'gpt-image-2', prompt4);
 
-    // 2. 従来プロンプト + gpt-image-2
-    console.log('\n[Pattern 2] Legacy Prompt + gpt-image-2');
-    await generate('pattern2_legacy_gpt-image-2', 'gpt-image-2', legacyPrompt);
-
-    // 3. 新プロンプト + gpt-image-2
-    console.log('\n[Pattern 3] New Prompt + gpt-image-2');
-    await generate('pattern3_new_gpt-image-2', 'gpt-image-2', newPrompt);
+    // 5. 新プロンプト改善案B（お絵かき帳情景風） + gpt-image-2
+    console.log('\n[Pattern 5] Scene sketchbook + gpt-image-2');
+    await generate('pattern5_scene_gpt-image-2', 'gpt-image-2', prompt5);
 
     console.log('\n--- Test Completed! ---');
 }
