@@ -16,9 +16,21 @@ const CONFIG = {
         accountId: '898916',
         bearId: '1',
         bearDirname: 'shirokuma_bot',
-        imageModel: 'gpt-image-1-mini',
+        imageModel: 'gpt-image-2',
         diaryPostfix: '\n\n...ってかんじの日だったワン',
-        imagePromptPrefix: '絵日記用に、下記の日記から特徴的な場面を子供がクレヨンで描いたような絵にしてください。ただし日記の著者の姿と犬は絶対に描かないこと。',
+        // 【プロンプト日本語訳】
+        // 白い画用紙に3歳の幼児がクレヨンで描いた、とても素朴で不器用で拙い絵。
+        // - 子供は日記のモチーフを描こうとしていますが手先が未熟なため、線は激しくふにゃふにゃと震え、形は大きく歪んで崩れています。
+        // - クレヨンの色は輪郭線を大幅にはみ出し、白い塗り残しの隙間やザラザラしたクレヨン質感があります。
+        // - 背景に意味のない落書き線や散らかりは描かず、非常に拙く不器用に描かれた日記のモチーフだけに集中してください。
+        // - 文字、アルファベット、単語は一切描かないこと。犬も人間も絶対に描かないこと。
+        // - 洗練された輪郭線、綺麗な塗り、整った対称的な形状は厳禁。本物の不器用で素朴な幼児のタッチにしてください。
+        imagePromptPrefix: `A delightfully crude, clumsy, and primitive crayon drawing by a 3-year-old toddler on white paper.
+- The child tried to draw the motifs from the diary, but lacks motor skills: lines are extremely wobbly, shaky, and all shapes are heavily distorted and crooked.
+- Crayon coloring spills significantly outside the outlines, leaving lots of uncolored white gaps and rough crayon texture.
+- Do NOT draw meaningless random scribble lines or scribbly messes in the background; focus on the diary motifs drawn very crudely and clumsily.
+- Strictly NO text, letters, or words. NO dogs, NO humans.
+- Strictly forbid polished outlines, neat coloring, or clean symmetrical shapes. Must look genuinely unskilled and primitive.`,
     },
     shirokumadadbot: {
         accountId: '899678',
