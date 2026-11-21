@@ -314,18 +314,29 @@ class Markov {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${TODAY} - ${config.bearDirname}の日記</title>
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; padding: 2em; line-height: 1.6; color: #333; background-color: #fdfdfd; max-width: 800px; margin: 0 auto; }
-        h1 { text-align: center; color: #555; margin-bottom: 1em; }
-        .diary-content { background-color: #fff; border-radius: 8px; padding: 2em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .diary-date { text-align: right; color: #777; font-size: 0.9em; margin-bottom: 1em; }
+        :root { --bg: #fdfdfd; --text: #333; --heading: #555; --link: #007bff; --content-bg:#fff; --comment:#777; --border:#eee; }
+        body.dark { --bg: #121212; --text: #e0e0e0; --heading: #90caf9; --link: #90caf9; --content-bg:#1e1e1e; --comment:#999; --border:#444; }
+
+        body { font-family: 'Noto Sans JP', sans-serif; padding: 2em; line-height: 1.6; color: var(--text); background-color: var(--bg); max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--heading); margin-bottom: 1em; }
+        .diary-content { background-color: var(--content-bg); border-radius: 8px; padding: 2em; box-shadow: 0 2px 5px var(--border); }
+        .diary-date { text-align: right; color: var(--comment); font-size: 0.9em; margin-bottom: 1em; }
         .diary-text { white-space: pre-wrap; margin-bottom: 1.5em; }
         .diary-image { text-align: center; margin-top: 1.5em; }
-        .diary-image img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .diary-image img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px var(--border); }
         .back-link { display: block; text-align: center; margin-top: 2em; font-size: 1.1em; }
-        .back-link a { text-decoration: none; color: #007bff; padding: 0.5em 1em; border: 1px solid #007bff; border-radius: 5px; }
-        .back-link a:hover { background-color: #007bff; color: #fff; }
+        .back-link a { text-decoration: none; color: var(--link); padding: 0.5em 1em; border: 1px solid var(--link); border-radius: 5px; }
+        .back-link a:hover { background-color: var(--link); color: var(--text); }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        (function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <h1>${config.bearDirname}の日記</h1>
@@ -346,7 +357,7 @@ class Markov {
     `;
     } else {
         htmlOutput += `
-        <div class="diary-image" style="color: #999; font-size: 0.8em; margin-top: 2em;">
+        <div class="diary-image" style="color: var(--comment); font-size: 0.8em; margin-top: 2em;">
             （今日の画像はありませんでした）
         </div>
     `;
