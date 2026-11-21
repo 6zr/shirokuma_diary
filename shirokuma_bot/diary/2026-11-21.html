@@ -6,30 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026/11/21(土) - shirokuma_botの日記</title>
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; padding: 2em; line-height: 1.6; color: #333; background-color: #fdfdfd; max-width: 800px; margin: 0 auto; }
-        h1 { text-align: center; color: #555; margin-bottom: 1em; }
-        .diary-content { background-color: #fff; border-radius: 8px; padding: 2em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .diary-date { text-align: right; color: #777; font-size: 0.9em; margin-bottom: 1em; }
+        :root { --bg: #fdfdfd; --text: #333; --heading: #555; --link: #007bff; --content-bg:#fff; --comment:#777; --border:#eee; }
+        body.dark { --bg: #121212; --text: #e0e0e0; --heading: #90caf9; --link: #90caf9; --content-bg:#1e1e1e; --comment:#999; --border:#444; }
+
+        body { font-family: 'Noto Sans JP', sans-serif; padding: 2em; line-height: 1.6; color: var(--text); background-color: var(--bg); max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--heading); margin-bottom: 1em; }
+        .diary-content { background-color: var(--content-bg); border-radius: 8px; padding: 2em; box-shadow: 0 2px 5px var(--border); }
+        .diary-date { text-align: right; color: var(--comment); font-size: 0.9em; margin-bottom: 1em; }
         .diary-text { white-space: pre-wrap; margin-bottom: 1.5em; }
         .diary-image { text-align: center; margin-top: 1.5em; }
-        .diary-image img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .diary-image img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px var(--border); }
         .back-link { display: block; text-align: center; margin-top: 2em; font-size: 1.1em; }
-        .back-link a { text-decoration: none; color: #007bff; padding: 0.5em 1em; border: 1px solid #007bff; border-radius: 5px; }
-        .back-link a:hover { background-color: #007bff; color: #fff; }
+        .back-link a { text-decoration: none; color: var(--link); padding: 0.5em 1em; border: 1px solid var(--link); border-radius: 5px; }
+        .back-link a:hover { background-color: var(--link); color: var(--text); }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        (function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <h1>shirokuma_botの日記</h1>
     <div class="diary-content">
         <div class="diary-date">2026/11/21(土)</div>
-        <div class="diary-text">ウォンバットワン！ 安全性へいを藉したワン！。それアスパラガスってワン、ウォンバットワン！ …、痛みを齎す(あだにへいを藉してもハムを齎す(あだにへいをかしと美味しいワン！ 起床ワン。それなスコットランド ...ワン。ラズベリーは確かってねワン！ 硬いワン！ …。ワ...ワン、ブウ、ランドこれがブランドただの不安ワン。まさに進むべき道は水泳も強いよワン。そろそろお散歩に甘酸っぱい野生の準備を感じる。満足かなあワン…わかるか？どんなに成功してあげるワン…。
+        <div class="diary-text">100%の話かワン、ラズベリーはハムを藉してもハムをもたらす) 沈魚落雁 夕食ワン。ランドと美味しいワン お風呂の不安ワン…。寇に行ったワン、ラズベリー・恋するように甘酸っぱい野生の話かワン。100%のように糧をもたらす) 実力派ワン。ランドとうにへいを食べるワン！ 安全性への不安ワン。グウさん今日はしろくまもハムをかしとうにへいを齎す(ちんぎょらくがん 夕食ワン すべてガ～～～～～～♪。 への実♪ワン、 アスパラガスって感じだねワン。
 
 ...ってかんじの日だったワン</div>
 
-        <!-- image-subject: Wombat brandishing asparagus in a playful scene -->
+        <!-- image-subject: wild raspberry romance sweet sour dialogue scene -->
         <div class="diary-image">
-            <img width="360px" src="2026-11-21.png" alt="Wombat brandishing asparagus in a playful scene">
+            <img width="360px" src="2026-11-21.png" alt="wild raspberry romance sweet sour dialogue scene">
         </div>
     
     </div>
