@@ -262,12 +262,13 @@ class Markov {
     let imageSubject = ''; // 抽出した絵のテーマ（alt・HTMLコメントに使用）
     try {
         // --- Step 1: 日記から「絵にする主役（テーマ）」を1つだけ抽出する ---
-        // shirokuma_bot のみ実施。他のボットはこのステップをスキップしてそのまま渡す。
+        // とりあえず shirokuma_bot のみ実施。他のボットはこのステップをスキップしてそのまま渡す。
         imageSubject = markovText; // フォールバック：抽出失敗時は日記テキストをそのまま使う
         if (config.bearDirname === 'shirokuma_bot') {
             const themeResponse = await client.chat.completions.create({
-                model: 'gpt-5.4-nano',
-                messages: [
+                'model': 'gpt-5.4-nano',
+                'max_completion_tokens' : 1024,
+                'messages': [
                     {
                         role: 'system',
                         // 【日本語訳】
@@ -285,7 +286,6 @@ class Markov {
                         content: `Pick the ONE most visually interesting subject or scene from this diary entry to draw as a picture:\n"""\n${markovText}\n"""`,
                     },
                 ],
-                max_tokens: 30,
             });
             const extracted = themeResponse.choices?.[0]?.message?.content?.trim();
             if (extracted) {
