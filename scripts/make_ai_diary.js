@@ -167,6 +167,16 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
         // 画像生成に失敗しても日記の生成は続ける
     }
 
+    const templatesDir = path.join(__dirname, 'templates');
+    const destStylePath = path.join(diaryOutputDir, 'style.css');
+    const destJsPath = path.join(diaryOutputDir, 'diary.js');
+    if (!fs.existsSync(destStylePath) && fs.existsSync(path.join(templatesDir, 'style.css'))) {
+        fs.copyFileSync(path.join(templatesDir, 'style.css'), destStylePath);
+    }
+    if (!fs.existsSync(destJsPath) && fs.existsSync(path.join(templatesDir, 'diary.js'))) {
+        fs.copyFileSync(path.join(templatesDir, 'diary.js'), destJsPath);
+    }
+
     let htmlOutput = `
 <!DOCTYPE html>
 <html lang="ja">
@@ -174,21 +184,12 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${TODAY} - ${config.bearDirname}の日記</title>
-    <style>
-        body { font-family: 'Noto Sans JP', sans-serif; padding: 2em; line-height: 1.6; color: #333; background-color: #fdfdfd; max-width: 800px; margin: 0 auto; }
-        h1 { text-align: center; color: #555; margin-bottom: 1em; }
-        .diary-content { background-color: #fff; border-radius: 8px; padding: 2em; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .diary-date { text-align: right; color: #777; font-size: 0.9em; margin-bottom: 1em; }
-        .diary-text { white-space: pre-wrap; margin-bottom: 1.5em; }
-        .diary-image { text-align: center; margin-top: 1.5em; }
-        .diary-image img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .back-link { display: block; text-align: center; margin-top: 2em; font-size: 1.1em; }
-        .back-link a { text-decoration: none; color: #007bff; padding: 0.5em 1em; border: 1px solid #007bff; border-radius: 5px; }
-        .back-link a:hover { background-color: #007bff; color: #fff; }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="diary.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="page-diary">
+    <button id="theme-toggle" onclick="toggleTheme()" title="ライト/ダークモード切替">🌙</button>
     <h1>${config.bearDirname}の日記</h1>
     <div class="diary-content">
         <div class="diary-date">${TODAY}</div>

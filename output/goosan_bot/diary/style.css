@@ -1,0 +1,142 @@
+/* ===================================================
+   1. サイト共通（カラー変数・フォント・切替ボタン）
+=================================================== */
+:root {
+    --bg: #fdfdfd;
+    --text: #333;
+    --heading: #555;
+    --link: #007bff;
+    --content-bg: #fff;
+    --comment: #777;
+    --border: #eee;
+    --toggle-bg: #e0e0e0;
+    --toggle-text: #333;
+}
+:root.dark, body.dark {
+    --bg: #121212;
+    --text: #e0e0e0;
+    --heading: #90caf9;
+    --link: #90caf9;
+    --content-bg: #1e1e1e;
+    --comment: #999;
+    --border: #444;
+    --toggle-bg: #333;
+    --toggle-text: #e0e0e0;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    padding: 2em;
+    line-height: 1.6;
+    color: var(--text);
+    background-color: var(--bg);
+    max-width: 800px;
+    margin: 0 auto;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1 {
+    text-align: center;
+    color: var(--heading);
+    margin-bottom: 1em;
+}
+
+#theme-toggle {
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    padding: 0.4em 0.8em;
+    border-radius: 20px;
+    border: 1px solid var(--link);
+    background: var(--toggle-bg);
+    color: var(--toggle-text);
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: all 0.3s;
+    z-index: 100;
+}
+
+/* ===================================================
+   2. 個別日記用スタイル (.page-diary)
+=================================================== */
+.page-diary .diary-content {
+    background-color: var(--content-bg);
+    border-radius: 8px;
+    padding: 2em;
+    box-shadow: 0 2px 5px var(--border);
+}
+
+.page-diary .diary-date {
+    text-align: right;
+    color: var(--comment);
+    font-size: 0.9em;
+    margin-bottom: 1em;
+}
+
+.page-diary .diary-text {
+    white-space: pre-wrap;
+    margin-bottom: 1.5em;
+}
+
+.page-diary .diary-image {
+    text-align: center;
+    margin-top: 1.5em;
+}
+
+.page-diary .diary-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px var(--border);
+}
+
+.page-diary .image-caption {
+    font-size: 0.8em;
+    color: var(--comment);
+    margin-top: 0.5em;
+    font-style: italic;
+}
+
+.page-diary .back-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 600px;
+    margin: 2em auto 0;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.page-diary .back-link a {
+    text-decoration: none;
+    color: var(--link);
+    padding: 0.5em 1em;
+    border: 1px solid var(--link);
+    border-radius: 5px;
+}
+
+.page-diary .back-link a:hover {
+    background-color: var(--link);
+    color: var(--bg);
+}
+
+/* ===================================================
+   3. アーカイブ一覧用スタイル (.page-archive)
+=================================================== */
+.page-archive ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.page-archive li {
+    margin-bottom: 0.5em;
+}
+
+.page-archive a {
+    text-decoration: none;
+    color: var(--link);
+}
+
+.page-archive a:hover {
+    text-decoration: underline;
+}

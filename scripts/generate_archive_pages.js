@@ -3,12 +3,23 @@ const path = require('path');
 
 const outputDir = './output';
 const bots = ['shirokuma_bot', 'shirokumadadbot', 'shirokuma_ai_bot', 'goosan_bot', 'shirokuma_neo_bot', 'abe_kuma_bot', 'ochisou_bot'];
+const templatesDir = path.join(__dirname, 'templates');
 
 bots.forEach(bot => {
     const diaryDir = path.join(outputDir, bot, 'diary');
     if (!fs.existsSync(diaryDir)) return;
 
-    // 1. 各日記HTMLファイルへの「前日」「翌日」ナビゲーションリンクの一括更新・付与
+    // 0. style.css と diary.js を各 bot の diary ディレクトリに配置
+    const destStylePath = path.join(diaryDir, 'style.css');
+    const destJsPath = path.join(diaryDir, 'diary.js');
+    if (fs.existsSync(path.join(templatesDir, 'style.css'))) {
+        fs.copyFileSync(path.join(templatesDir, 'style.css'), destStylePath);
+    }
+    if (!fs.existsSync(destJsPath) && fs.existsSync(path.join(templatesDir, 'diary.js'))) {
+        fs.copyFileSync(path.join(templatesDir, 'diary.js'), destJsPath);
+    }
+
+    // 1. 各日記HTMLファイルへのナビゲーションリンク・共通CSS/JSの一括更新
     // 日付順（古い順）にソート
     const chronologicalFiles = fs.readdirSync(diaryDir)
         .filter(f => f.endsWith('.html') && f !== 'archive.html' && f !== 'index.html')
@@ -35,6 +46,27 @@ bots.forEach(bot => {
 
         let updatedHtml = htmlContent;
 
+        // 古いインライン <style>...</style> を除去
+        updatedHtml = updatedHtml.replace(/<style>[\s\S]*?<\/style>\s*/gi, '');
+
+        // 過去のインライン <script>...</script> を除去
+        updatedHtml = updatedHtml.replace(/<script>\s*\(function\(\)\s*\{[\s\S]*?<\/script>\s*/gi, '');
+
+        // <link rel="stylesheet" href="style.css"> と <script src="diary.js"></script> が無ければ <head> に追加
+        if (!updatedHtml.includes('href="style.css"')) {
+            updatedHtml = updatedHtml.replace('</head>', '    <link rel="stylesheet" href="style.css">\n    <script src="diary.js"></script>\n</head>');
+        }
+
+        // <body class="page-diary"> の設定
+        if (!updatedHtml.includes('class="page-diary"')) {
+            updatedHtml = updatedHtml.replace(/<body[^>]*>/i, '<body class="page-diary">');
+        }
+
+        // <button id="theme-toggle"...> が無ければ <body> 直後に挿入
+        if (!updatedHtml.includes('id="theme-toggle"')) {
+            updatedHtml = updatedHtml.replace(/<body[^>]*>/i, '$&\n    <button id="theme-toggle" onclick="toggleTheme()" title="ライト/ダークモード切替">🌙</button>');
+        }
+
         // 【重複防止】既存のすべての <div class="back-link"...>...</div> を一括削除
         updatedHtml = updatedHtml.replace(/<div[^>]*class=["']back-link["'][^>]*>[\s\S]*?<\/div>/gi, '');
 
@@ -44,7 +76,7 @@ bots.forEach(bot => {
         // 内容が変更された場合のみディスクに書き込み保存（パフォーマンス最適化）
         if (updatedHtml !== htmlContent) {
             fs.writeFileSync(filePath, updatedHtml);
-            console.log(`Updated navigation links in ${filePath}`);
+            console.log(`Updated navigation links and assets in ${filePath}`);
         }
     });
 
@@ -57,25 +89,11 @@ bots.forEach(bot => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${bot} - 日記アーカイブ</title>
-    <style>
-        :root {
-            --bg: #fdfdfd; --text: #333; --heading: #555;
-            --link: #007bff; --toggle-bg: #e0e0e0; --toggle-text: #333;
-        }
-        body.dark {
-            --bg: #121212; --text: #e0e0e0; --heading: #90caf9;
-            --link: #90caf9; --toggle-bg: #333; --toggle-text: #e0e0e0;
-        }
-        body { font-family: sans-serif; padding: 2em; background-color: var(--bg); color: var(--text); transition: background-color 0.3s, color 0.3s; }
-        h1 { text-align: center; color: var(--heading); }
-        ul { list-style: none; padding-left: 0; }
-        li { margin-bottom: 0.5em; }
-        a { text-decoration: none; color: var(--link); }
-        a:hover { text-decoration: underline; }
-        #theme-toggle { position: fixed; top: 1em; right: 1em; padding: 0.4em 0.8em; border-radius: 20px; border: 1px solid var(--link); background: var(--toggle-bg); color: var(--toggle-text); cursor: pointer; font-size: 1.1em; transition: all 0.3s; z-index: 100; }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="diary.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="page-archive">
     <button id="theme-toggle" onclick="toggleTheme()" title="ライト/ダークモード切替">🌙</button>
     <h1>${bot} - 日記アーカイブ</h1>
     <p><a href="../../index.html">トップページに戻る</a></p>
@@ -88,27 +106,6 @@ bots.forEach(bot => {
     });
 
     archiveHtmlContent += `    </ul>
-    <script>
-        (function() {
-            var saved = localStorage.getItem('theme');
-            if (saved === 'dark') {
-                document.body.classList.add('dark');
-                var btn = document.getElementById('theme-toggle');
-                if (btn) btn.textContent = '☀️';
-            }
-        })();
-        function toggleTheme() {
-            var body = document.body;
-            var btn = document.getElementById('theme-toggle');
-            if (body.classList.toggle('dark')) {
-                btn.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                btn.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
-            }
-        }
-    </script>
 </body>
 </html>
 `;
