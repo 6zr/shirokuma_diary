@@ -329,14 +329,6 @@ class Markov {
         .back-link a:hover { background-color: var(--link); color: var(--text); }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-
-    <script>
-        (function() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark');
-            }
-        })();
-    </script>
 </head>
 <body>
     <h1>${config.bearDirname}の日記</h1>
@@ -368,6 +360,14 @@ class Markov {
     <div class="back-link">
         <a href="../../index.html">トップページに戻る</a>
     </div>
+
+    <script>
+        (function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark');
+            }
+        })();
+    </script>
 </body>
 </html>
 `;
