@@ -266,7 +266,7 @@ class Markov {
         imageSubject = markovText; // フォールバック：抽出失敗時は日記テキストをそのまま使う
         if (config.bearDirname === 'shirokuma_bot') {
             const themeResponse = await client.chat.completions.create({
-                model: 'gpt-4.1-nano', // 軽量・高速・低コスト。短いテキスト抽出タスクに最適。
+                model: 'gpt-5.4-nano',
                 messages: [
                     {
                         role: 'system',
