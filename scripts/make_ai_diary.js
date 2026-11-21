@@ -189,7 +189,6 @@ const TODAY = `${year}/${month}/${day}(${shortDayOfWeek})`;
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body class="page-diary">
-    <button id="theme-toggle" onclick="toggleTheme()" title="ライト/ダークモード切替">🌙</button>
     <h1>${config.bearDirname}の日記</h1>
     <div class="diary-content">
         <div class="diary-date">${TODAY}</div>

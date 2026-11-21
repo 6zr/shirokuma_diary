@@ -62,10 +62,8 @@ bots.forEach(bot => {
             updatedHtml = updatedHtml.replace(/<body[^>]*>/i, '<body class="page-diary">');
         }
 
-        // <button id="theme-toggle"...> が無ければ <body> 直後に挿入
-        if (!updatedHtml.includes('id="theme-toggle"')) {
-            updatedHtml = updatedHtml.replace(/<body[^>]*>/i, '$&\n    <button id="theme-toggle" onclick="toggleTheme()" title="ライト/ダークモード切替">🌙</button>');
-        }
+        // 日記ページには theme-toggle ボタンを置かない（もしあれば除去）
+        updatedHtml = updatedHtml.replace(/\s*<button id="theme-toggle"[\s\S]*?<\/button>/gi, '');
 
         // 【重複防止】既存のすべての <div class="back-link"...>...</div> を一括削除
         updatedHtml = updatedHtml.replace(/<div[^>]*class=["']back-link["'][^>]*>[\s\S]*?<\/div>/gi, '');

@@ -132,9 +132,14 @@ targetBots.forEach(bot => {
             html = html.replace(/<body[^>]*>/i, `<body class="${targetBodyClass}">`);
         }
 
-        // theme-toggle ボタンの追加
-        if (!html.includes('id="theme-toggle"')) {
-            html = html.replace(/<body[^>]*>/i, '$&\n    <button id="theme-toggle" onclick="toggleTheme()" title="ライト/ダークモード切替">🌙</button>');
+        if (isArchive) {
+            // archive.html のみ theme-toggle ボタンを配置
+            if (!html.includes('id="theme-toggle"')) {
+                html = html.replace(/<body[^>]*>/i, '$&\n    <button id="theme-toggle" onclick="toggleTheme()" title="ライト/ダークモード切替">🌙</button>');
+            }
+        } else {
+            // 日記ページには theme-toggle ボタンを置かない（もしあれば除去）
+            html = html.replace(/\s*<button id="theme-toggle"[\s\S]*?<\/button>/gi, '');
         }
 
         if (html !== original) {
