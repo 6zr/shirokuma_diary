@@ -121,6 +121,20 @@ jobs:
           DIARY_DATE: ${{ github.event.inputs.diary_date }}
         run: node scripts/make_abe_diary.js
 
+      - name: test_images
+        if: github.event.inputs.bot_name == 'test_images'
+        env:
+          OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
+        run: node scripts/test_compare.js
+
+      - name: Upload test images
+        if: github.event.inputs.bot_name == 'test_images'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-comparison-images
+          path: test_outputs/
+          retention-days: 7
+
       - name: Compress images
         run: |
           # 毎回updateすると遅いため、installのみ試行し、失敗した場合のみupdateする
