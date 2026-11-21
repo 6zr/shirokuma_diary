@@ -22,7 +22,7 @@ bots.forEach(bot => {
     // 1. 各日記HTMLファイルへのナビゲーションリンク・共通CSS/JSの一括更新
     // 日付順（古い順）にソート
     const chronologicalFiles = fs.readdirSync(diaryDir)
-        .filter(f => f.endsWith('.html') && f !== 'archive.html' && f !== 'index.html')
+        .filter(f => f.endsWith('.html') && f !== 'archive.html' && f !== 'index.html' && f !== 'latest.html')
         .sort();
 
     chronologicalFiles.forEach((file, index) => {
@@ -110,6 +110,28 @@ bots.forEach(bot => {
 
     fs.writeFileSync(path.join(diaryDir, 'archive.html'), archiveHtmlContent);
     console.log(`Generated archive.html for ${bot}`);
+
+    // 3. 常に最新の日記へ転送する latest.html の生成
+    const latestFile = files[0];
+    if (latestFile) {
+        const latestHtmlContent = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=${latestFile}">
+    <title>最新の日記へ移動中...</title>
+    <script>
+        location.replace('${latestFile}');
+    </script>
+</head>
+<body>
+    <p>最新の日記へ移動しています... 自動的に移動しない場合は <a href="${latestFile}">こちら</a> をクリックしてください。</p>
+</body>
+</html>
+`;
+        fs.writeFileSync(path.join(diaryDir, 'latest.html'), latestHtmlContent);
+        console.log(`Generated latest.html for ${bot} -> ${latestFile}`);
+    }
 });
 
 console.log('All archive pages and diary navigation links updated successfully.');
